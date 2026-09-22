@@ -34,6 +34,7 @@ function renderCard(){
  const p=selected();$('title').textContent=p.name;$('kind').textContent='Angra dos Reis';
  $('card').setAttribute('aria-label','Ver detalhes de '+p.name);
  $('counter').textContent=(places.findIndex(x=>x.id===p.id)+1)+' de '+places.length+' lugares';
+ $('discovery-progress').max=places.length;$('discovery-progress').value=places.findIndex(x=>x.id===p.id)+1;
  $('map-status').textContent=p.name+' · coordenadas ainda não conferidas';
  $('map-link').href='https://www.openstreetmap.org/search?query='+encodeURIComponent(p.name+', Angra dos Reis');
  if(marker){map.removeLayer(marker);marker=null}
@@ -156,7 +157,19 @@ $('request').onclick=()=>{
  f.onsubmit=e=>{e.preventDefault();copy('Olá! Gostaria de opções de '+f.elements.service.value+'.\nGrupo: '+state.profile.party+'\nMês: '+(state.profile.tripDate||'A definir')+'\nOrçamento: '+state.profile.budget+'\n'+routeText())};
 };
 save();render();
+$('previous').onclick=()=>{if(busy)return;const i=places.findIndex(p=>p.id===state.current);select(places[(i-1+places.length)%places.length].id)};
+$('map-current').onclick=()=>{renderCard();if(!approximateCoordinates[state.current])notice('Este destino ainda não tem coordenadas conferidas. Use a busca de localização.')};
+$('map-expand').onclick=()=>{const expanded=document.querySelector('.discover').classList.toggle('expanded');$('map-expand').textContent=expanded?'Recolher mapa':'Ampliar mapa';$('map-expand').setAttribute('aria-expanded',String(expanded));if(map)requestAnimationFrame(()=>map.invalidateSize())};
 const script=node('script');script.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-script.onload=()=>{map=L.map('map').setView([-23.10,-44.30],10);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors',maxZoom:19}).addTo(map);renderCard();setTimeout(()=>map.invalidateSize(),0)};
+script.onload=()=>{
+ map=L.map('map',{scrollWheelZoom:false}).setView([-23.10,-44.30],10);
+ const streets=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors',maxZoom:19});
+ const satellite=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Tiles © Esri — Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community',maxZoom:19}).addTo(map);
+ L.control.layers({'Satélite':satellite,'Mapa':streets},null,{collapsed:false}).addTo(map);
+ let failed=false;satellite.on('tileerror',()=>{if(failed)return;failed=true;if(map.hasLayer(satellite)){map.removeLayer(satellite);streets.addTo(map);notice('Satélite indisponível. Exibindo mapa convencional.')}});
+ const overview=button('Ver toda a região',()=>map.fitBounds([[-23.25,-44.60],[-22.88,-44.08]]));
+ document.querySelector('.map-panel').appendChild(overview);
+ renderCard();map.fitBounds([[-23.25,-44.60],[-22.88,-44.08]]);setTimeout(()=>map.invalidateSize(),0);
+};
 script.onerror=()=>{$('map').textContent='Mapa indisponível. Use o link de localização abaixo.'};document.head.append(script);
 })();
