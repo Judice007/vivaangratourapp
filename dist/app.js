@@ -70,15 +70,18 @@ function open(title){
 function details(id){
  const p=byId.get(id);if(!p)return;
  const c=open(p.name);
+ const eyebrow=node('span',p.verified?'Angra dos Reis · verificado':'Angra dos Reis');eyebrow.className='modal-eyebrow';c.insertBefore(eyebrow,c.firstChild);
  if(p.photoUrl){
   const img=node('img');img.src=p.photoUrl;img.alt=p.name;img.loading='lazy';img.className='modal-photo';c.append(img);
   if(p.photoCredit)c.append(node('small',p.photoCredit));
  }
  c.append(node('p',p.description||'Descrição, fotos, acesso, duração e valores estão em conferência para este local.'));
  if(p.access){const acc=node('p',p.access);acc.className='access-note';c.append(acc)}
- const a=node('a','Consultar portal oficial de turismo');a.href='https://visite.angra.rj.gov.br/pontos-turisticos';a.target='_blank';a.rel='noopener';c.append(a);
- c.append(button(state.favorites.includes(id)?'Já está nos favoritos':'Salvar nos favoritos',()=>{favorite(id);details(id)}));
- c.append(button('Adicionar a um dia',()=>chooseDay(id)));
+ const actions=node('div');actions.className='modal-actions';
+ const fav=button(state.favorites.includes(id)?'✓ Nos favoritos':'♥ Salvar nos favoritos',()=>{favorite(id);details(id)});fav.className='primary';
+ actions.append(fav,button('Adicionar a um dia',()=>chooseDay(id)));
+ c.append(actions);
+ const a=node('a','Consultar portal oficial de turismo');a.href='https://visite.angra.rj.gov.br/pontos-turisticos';a.target='_blank';a.rel='noopener';a.className='modal-source-link';c.append(a);
 }
 function chooseDay(id){
  const c=open('Adicionar '+byId.get(id).name);
