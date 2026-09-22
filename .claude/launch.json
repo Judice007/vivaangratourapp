@@ -6,6 +6,12 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["--yes", "serve", "dist", "-l", "8123"],
       "port": 8123
+    },
+    {
+      "name": "cards-app-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "cards-app", "run", "dev", "--", "--port", "5173", "--strictPort"],
+      "port": 5173
     }
   ]
 }
