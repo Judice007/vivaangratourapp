@@ -28,7 +28,7 @@ else {
  }
  if(!state.route.length) state.route=Array.from({length:profile.days},()=>({id:crypto.randomUUID(),items:[]}));
 }
-let map, marker, busy=false, suppressClick=false, drag=null;
+let map, marker, busy=false;
 function notice(text){$('notice').textContent=text;clearTimeout(notice.timer);notice.timer=setTimeout(()=>$('notice').textContent='',3500)}
 function save(){try{localStorage.setItem('angra-state-v2',JSON.stringify(state))}catch{notice('Não foi possível salvar neste navegador. Copie seu roteiro antes de sair.')} }
 function node(tag,text){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n}
@@ -36,12 +36,16 @@ function button(text,fn){const b=node('button',text);b.type='button';b.onclick=f
 function selected(){return byId.get(state.current)}
 function select(id){if(!byId.has(id))return;state.current=id;save();renderCard()}
 function renderCard(){
- const p=selected();$('title').textContent=p.name;$('kind').textContent=p.verified?'Angra dos Reis · verificado':'Angra dos Reis';
- $('card').setAttribute('aria-label','Ver detalhes de '+p.name);
- $('card').classList.toggle('has-photo',!!p.photoUrl);
- $('card-photo').style.backgroundImage=p.photoUrl?'url('+p.photoUrl+')':'';
- $('card-desc').textContent=p.description?p.description.split(/(?<=[.!?])\s/)[0]:'Toque para ver informações';
- $('counter').textContent=(places.findIndex(x=>x.id===p.id)+1)+' de '+places.length+' lugares';
+ const p=selected();
+ const idx=places.findIndex(x=>x.id===p.id);
+ const slice=[0,1,2].map(o=>places[(idx+o)%places.length]).map(pl=>({
+  id:pl.id,name:pl.name,
+  kind:pl.verified?'Angra dos Reis · verificado':'Angra dos Reis',
+  description:pl.description?pl.description.split(/(?<=[.!?])\s/)[0]:(pl.photoUrl?undefined:'Fotos e dados em conferência — toque para ver informações'),
+  photoUrl:pl.photoUrl,photoCredit:pl.photoCredit
+ }));
+ window.AngraCardWidget?.render(slice);
+ $('counter').textContent=(idx+1)+' de '+places.length+' lugares';
  $('discovery-progress').max=places.length;$('discovery-progress').value=places.findIndex(x=>x.id===p.id)+1;
  $('map-status').textContent=p.name+' · coordenadas ainda não conferidas';
  $('map-link').href='https://www.openstreetmap.org/search?query='+encodeURIComponent(p.name+', Angra dos Reis');
@@ -55,10 +59,8 @@ function advance(like){
  if(busy)return;busy=true;const id=state.current;
  if(like)favorite(id);
  const index=places.findIndex(p=>p.id===id);
- const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
- const animation=!reduced?$('card').animate([{transform:'translateX(0)'},{transform:'translateX('+(like?120:-120)+'px) rotate('+(like?8:-8)+'deg)',opacity:0}],{duration:180}):null;
- const finish=()=>{select(places[(index+1)%places.length].id);animation?.cancel();busy=false};
- if(animation)animation.finished.then(finish,finish);else finish();
+ select(places[(index+1)%places.length].id);
+ busy=false;
 }
 function open(title){
  $('modal-content').replaceChildren(node('h2',title));$('modal-content').firstChild.id='modal-title';
@@ -149,16 +151,12 @@ $('close').onclick=()=>$('modal').close();
 $('modal').addEventListener('click',e=>{if(e.target===$('modal')){const r=$('modal').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)$('modal').close()}});
 $('edit-trip').onclick=editTrip;$('pass').onclick=()=>advance(false);$('like').onclick=()=>advance(true);
 $('search').oninput=renderCatalog;
-$('card').onclick=()=>{if(!suppressClick&&!busy)details(state.current)};
-$('card').onpointerdown=e=>{if(e.button!==0||busy)return;drag={x:e.clientX,y:e.clientY,dx:0};$('card').setPointerCapture(e.pointerId)};
-$('card').onpointermove=e=>{if(!drag)return;drag.dx=e.clientX-drag.x;if(Math.abs(drag.dx)>10)suppressClick=true;$('card').style.transform='translateX('+Math.max(-100,Math.min(100,drag.dx))+'px) rotate('+drag.dx/35+'deg)'};
-function endDrag(e,cancel=false){
- if(!drag)return;const dx=drag.dx,dy=e.clientY-drag.y;drag=null;$('card').style.transform='';
- if(!cancel&&Math.abs(dx)>85&&Math.abs(dx)>Math.abs(dy))advance(dx>0);
- setTimeout(()=>suppressClick=false,0);
-}
-$('card').onpointerup=e=>endDrag(e);$('card').onpointercancel=e=>endDrag(e,true);
-document.addEventListener('keydown',e=>{if($('modal').open||e.target!==$('card'))return;if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();advance(e.key==='ArrowRight')}});
+window.AngraCardBridge={
+ swipe:(id,dir)=>{if(busy)return;if(id!==state.current&&byId.has(id)){state.current=id;save()}advance(dir==='right')},
+ open:id=>{if(byId.has(id))details(id)},
+ ready:()=>renderCard()
+};
+document.addEventListener('keydown',e=>{if($('modal').open||e.target!==document.body)return;if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();advance(e.key==='ArrowRight')}});
 $('add-day').onclick=()=>{state.route.push({id:crypto.randomUUID(),items:[]});save();renderRoute()};
 function routeText(){return 'Minha viagem para Angra\nBase: '+state.profile.stay+'\n\n'+state.route.map((d,i)=>'Dia '+(i+1)+'\n'+(d.items.map(item=>'• '+(item.placeId?byId.get(item.placeId).name:item.note)).join('\n')||'Dia livre')).join('\n\n')}
 async function copy(text){try{await navigator.clipboard.writeText(text);notice('Copiado!')}catch{const c=open('Copie o texto'),t=node('textarea');t.value=text;t.rows=12;c.append(t);t.select()}}
