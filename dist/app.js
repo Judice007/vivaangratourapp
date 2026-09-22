@@ -2,7 +2,12 @@
 'use strict';
 const $ = id => document.getElementById(id);
 const slug = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-const places = AngraData.names.map(name => ({id:slug(name),name}));
+const curatedByName = new Map((AngraData.curated||[]).map(c=>[c.name,c]));
+const orderedNames = [...curatedByName.keys(), ...AngraData.names.filter(n=>!curatedByName.has(n))];
+const places = orderedNames.map(name => {
+ const c = curatedByName.get(name);
+ return c ? {id:slug(name),name,lat:c.lat,lng:c.lng,description:c.description,photoUrl:c.photoUrl,photoCredit:c.photoCredit,access:c.access,verified:true} : {id:slug(name),name};
+});
 const byId = new Map(places.map(p=>[p.id,p]));
 const approximateCoordinates = {'praia-do-aventureiro':[-23.188,-44.315],'ilha-da-gipoia':[-23.047,-44.290],'vila-do-abraao':[-23.143,-44.166],'lagoa-azul':[-23.105,-44.255],'praia-de-lopes-mendes':[-23.174,-44.143],'pico-do-papagaio':[-23.155,-44.185]};
 const read = key => {try{return JSON.parse(localStorage.getItem(key))}catch{return null}};
@@ -31,15 +36,18 @@ function button(text,fn){const b=node('button',text);b.type='button';b.onclick=f
 function selected(){return byId.get(state.current)}
 function select(id){if(!byId.has(id))return;state.current=id;save();renderCard()}
 function renderCard(){
- const p=selected();$('title').textContent=p.name;$('kind').textContent='Angra dos Reis';
+ const p=selected();$('title').textContent=p.name;$('kind').textContent=p.verified?'Angra dos Reis · verificado':'Angra dos Reis';
  $('card').setAttribute('aria-label','Ver detalhes de '+p.name);
+ $('card').classList.toggle('has-photo',!!p.photoUrl);
+ $('card-photo').style.backgroundImage=p.photoUrl?'url('+p.photoUrl+')':'';
+ $('card-desc').textContent=p.description?p.description.split(/(?<=[.!?])\s/)[0]:'Toque para ver informações';
  $('counter').textContent=(places.findIndex(x=>x.id===p.id)+1)+' de '+places.length+' lugares';
  $('discovery-progress').max=places.length;$('discovery-progress').value=places.findIndex(x=>x.id===p.id)+1;
  $('map-status').textContent=p.name+' · coordenadas ainda não conferidas';
  $('map-link').href='https://www.openstreetmap.org/search?query='+encodeURIComponent(p.name+', Angra dos Reis');
  if(marker){map.removeLayer(marker);marker=null}
- const coords=approximateCoordinates[p.id];
- if(coords&&map){marker=L.marker(coords).addTo(map).bindPopup(node('span',p.name+' · localização aproximada'));marker.on('click',()=>details(p.id));map.setView(coords,12);$('map-status').textContent=p.name+' · localização aproximada, a conferir';}
+ const coords=(p.lat!=null?[p.lat,p.lng]:approximateCoordinates[p.id]);
+ if(coords&&map){marker=L.marker(coords).addTo(map).bindPopup(node('span',p.name+(p.verified?' · localização verificada':' · localização aproximada')));marker.on('click',()=>details(p.id));map.setView(coords,13);$('map-status').textContent=p.name+(p.verified?' · localização verificada':' · localização aproximada, a conferir');}
  else if(map)map.setView([-23.10,-44.30],10);
 }
 function favorite(id){if(!state.favorites.includes(id))state.favorites.push(id);save();renderFavorites()}
@@ -60,7 +68,12 @@ function open(title){
 function details(id){
  const p=byId.get(id);if(!p)return;
  const c=open(p.name);
- c.append(node('p','Descrição, fotos, acesso, duração e valores estão em conferência para este local.'));
+ if(p.photoUrl){
+  const img=node('img');img.src=p.photoUrl;img.alt=p.name;img.loading='lazy';img.className='modal-photo';c.append(img);
+  if(p.photoCredit)c.append(node('small',p.photoCredit));
+ }
+ c.append(node('p',p.description||'Descrição, fotos, acesso, duração e valores estão em conferência para este local.'));
+ if(p.access){const acc=node('p',p.access);acc.className='access-note';c.append(acc)}
  const a=node('a','Consultar portal oficial de turismo');a.href='https://visite.angra.rj.gov.br/pontos-turisticos';a.target='_blank';a.rel='noopener';c.append(a);
  c.append(button(state.favorites.includes(id)?'Já está nos favoritos':'Salvar nos favoritos',()=>{favorite(id);details(id)}));
  c.append(button('Adicionar a um dia',()=>chooseDay(id)));
@@ -167,8 +180,7 @@ script.onload=()=>{
  const satellite=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Tiles © Esri — Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community',maxZoom:19}).addTo(map);
  L.control.layers({'Satélite':satellite,'Mapa':streets},null,{collapsed:false}).addTo(map);
  let failed=false;satellite.on('tileerror',()=>{if(failed)return;failed=true;if(map.hasLayer(satellite)){map.removeLayer(satellite);streets.addTo(map);notice('Satélite indisponível. Exibindo mapa convencional.')}});
- const overview=button('Ver toda a região',()=>map.fitBounds([[-23.25,-44.60],[-22.88,-44.08]]));
- document.querySelector('.map-panel').appendChild(overview);
+ $('map-overview').onclick=()=>map.fitBounds([[-23.25,-44.60],[-22.88,-44.08]]);
  renderCard();map.fitBounds([[-23.25,-44.60],[-22.88,-44.08]]);setTimeout(()=>map.invalidateSize(),0);
 };
 script.onerror=()=>{$('map').textContent='Mapa indisponível. Use o link de localização abaixo.'};document.head.append(script);
