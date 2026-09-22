@@ -45,7 +45,7 @@ export default function App() {
   return (
     <div className="mx-auto flex min-h-svh max-w-md flex-col gap-4 p-4">
       <header className="pt-2 text-center">
-        <p className="text-xs font-bold tracking-[0.16em] text-primary uppercase">Deu Match em Angra</p>
+        <p className="text-xs font-bold tracking-[0.16em] text-primary uppercase">Viva Angra Tour</p>
         <h1 className="mt-1 text-2xl font-bold text-foreground">Descubra seu próximo destino</h1>
       </header>
 
