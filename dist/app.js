@@ -169,8 +169,13 @@ $('request').onclick=()=>{
 };
 save();render();
 $('previous').onclick=()=>{if(busy)return;const i=places.findIndex(p=>p.id===state.current);select(places[(i-1+places.length)%places.length].id)};
-$('map-current').onclick=()=>{renderCard();if(!approximateCoordinates[state.current])notice('Este destino ainda não tem coordenadas conferidas. Use a busca de localização.')};
-$('map-expand').onclick=()=>{const expanded=document.querySelector('.discover').classList.toggle('expanded');$('map-expand').textContent=expanded?'Recolher mapa':'Ampliar mapa';$('map-expand').setAttribute('aria-expanded',String(expanded));if(map)requestAnimationFrame(()=>map.invalidateSize())};
+$('map-expand').onclick=()=>{
+ const expanded=document.querySelector('.discover').classList.toggle('expanded');
+ const label=expanded?'Recolher mapa':'Ampliar mapa';
+ $('map-expand').textContent=expanded?'⤡':'⛶';
+ $('map-expand').title=label;$('map-expand').setAttribute('aria-label',label);$('map-expand').setAttribute('aria-expanded',String(expanded));
+ if(map)requestAnimationFrame(()=>map.invalidateSize())
+};
 const script=node('script');script.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
 script.onload=()=>{
  map=L.map('map',{scrollWheelZoom:false}).setView([-23.10,-44.30],10);

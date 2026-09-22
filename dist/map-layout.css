@@ -28,13 +28,20 @@ header strong{color:#176d69;letter-spacing:-.025em}
 .map-panel>h2{font-size:17px;padding:20px 22px}
 .map-panel #map{height:580px;background:radial-gradient(ellipse at top,#d4e4d7,#b5d8df)}
 #card-root{bottom:62px;box-shadow:0 12px 32px #082b4150}
-.map-tools{display:flex;gap:8px;padding:14px 18px 0;flex-wrap:wrap}
-.map-tools button{background:#f1f6f3;border-color:#dce8e0;font-size:13px;flex:1}
-.actions{gap:8px;margin:16px 18px}
-.actions button{min-width:0;padding:12px 10px;font-weight:650}
-.actions #previous{flex:0 0 44px;max-width:44px}
-#like{background:#197b70;border-color:#197b70}
+.map-float-tools{position:absolute;top:96px;left:16px;z-index:600;display:flex;flex-direction:column;gap:8px}
+.map-float-tools button{width:36px;height:36px;padding:0;border-radius:50%;font-size:16px;line-height:1;box-shadow:0 4px 10px #0003;background:#ffffffec}
+.map-float-tools button:hover{background:#fff}
+.actions{gap:16px;margin:18px}
+.actions button{flex:0 0 auto;min-width:0;max-width:none;padding:0;border-radius:50%;font-weight:600;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px #0001}
+.actions #previous{width:38px;height:38px;font-size:19px;color:#3d5c58}
+#pass{width:52px;height:52px;font-size:19px;color:#c94766;border-color:#f2d9df}
+#pass:hover{background:#fdf1f3}
+#like{width:62px;height:62px;font-size:24px;background:#197b70;border-color:#197b70;box-shadow:0 6px 16px #197b7040}
 #like:hover{background:#12675e}
+aside section h2::before{content:'';display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:9px;vertical-align:middle}
+.tone-favorites h2::before{background:#c94766}
+.tone-route h2::before{background:#197b70}
+.tone-partners h2::before{background:#c98a2c}
 #discovery-progress{display:block;width:calc(100% - 40px);height:4px;border:0;border-radius:8px;overflow:hidden;margin:0 20px 9px;accent-color:#197b70}
 #discovery-progress::-webkit-progress-bar{background:#e7efea}
 #discovery-progress::-webkit-progress-value{background:#197b70}
@@ -48,4 +55,4 @@ aside p{font-size:14px}
 .modal-photo{width:100%;border-radius:14px;max-height:260px;object-fit:cover;display:block}
 #modal-content small{display:block;color:#7c9591;font-size:12px;margin:4px 0 12px}
 .access-note{font-size:14px;color:#3d5c58;background:#f1f6f3;border-radius:10px;padding:10px 12px}
-@media(max-width:760px){.layout{grid-template-columns:1fr}.intro{padding-top:8px}.intro h1{font-size:40px}.intro p{font-size:14px}.map-panel #map{height:490px}.expanded #map{height:72vh}.expanded+aside{display:block}.map-tools button{font-size:12px}.actions button{font-size:14px}header strong{font-size:15px}header button{font-size:13px}#trip-summary{line-height:1.6}#card-root{height:200px}}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.intro{padding-top:8px}.intro h1{font-size:40px}.intro p{font-size:14px}.map-panel #map{height:490px}.expanded #map{height:72vh}.expanded+aside{display:block}header strong{font-size:15px}header button{font-size:13px}#trip-summary{line-height:1.6}#card-root{height:200px}}
