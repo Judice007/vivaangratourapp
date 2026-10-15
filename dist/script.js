@@ -1,5 +1,5 @@
 const SITE_CONFIG = {
-  whatsappNumber: "5524999999999",
+  whatsappNumber: "552433662420",
   instagramHandle: "@vivaangratour",
   instagramUrl: "https://www.instagram.com/vivaangratour/",
 };
