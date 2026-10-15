@@ -3,7 +3,7 @@ import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
-// Builds the swipe-card island as a single IIFE bundle consumed by dist/index.html.
+// Builds the swipe-card island as a single IIFE bundle consumed by dist/app/index.html.
 export default defineConfig({
   define: {
     'process.env.NODE_ENV': JSON.stringify('production'),
@@ -16,7 +16,7 @@ export default defineConfig({
   },
   publicDir: false,
   build: {
-    outDir: path.resolve(import.meta.dirname, '../dist/cards-widget'),
+    outDir: path.resolve(import.meta.dirname, '../dist/app/cards-widget'),
     emptyOutDir: true,
     cssCodeSplit: false,
     lib: {

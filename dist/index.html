@@ -1,35 +1,799 @@
 <!doctype html>
 <html lang="pt-BR">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Viva Angra Tour</title>
-<meta name="description" content="Descubra praias e ilhas de Angra dos Reis e Ilha Grande deslizando por destinos reais, salve seus favoritos e monte seu roteiro de viagem.">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Viva Angra Tour">
-<meta property="og:title" content="Viva Angra Tour — descubra Angra dos Reis e Ilha Grande">
-<meta property="og:description" content="Deslize por praias e ilhas reais de Angra dos Reis, salve seus favoritos e monte seu roteiro de viagem.">
-<meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/6/69/Canto_da_Praia_de_Lopes_Mendes_em_Ilha_Grande%2C_RJ.jpg">
-<meta property="og:url" content="https://vivaangratourapp.vercel.app/">
-<meta property="og:locale" content="pt_BR">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Viva Angra Tour — descubra Angra dos Reis e Ilha Grande">
-<meta name="twitter:description" content="Deslize por praias e ilhas reais de Angra dos Reis, salve seus favoritos e monte seu roteiro de viagem.">
-<meta name="twitter:image" content="https://upload.wikimedia.org/wikipedia/commons/6/69/Canto_da_Praia_de_Lopes_Mendes_em_Ilha_Grande%2C_RJ.jpg">
-<meta name="theme-color" content="#197b70">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A6%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="app.css">
-<link rel="stylesheet" href="map-layout.css">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="cards-widget/widget.css">
-<script src="data.js" defer></script><script src="app.js" defer></script><script src="cards-widget/widget.js" defer></script>
-</head>
-<body>
-<header><strong>✦ Viva Angra Tour</strong><button id="edit-trip">Editar viagem</button></header>
-<main><div class="intro"><span class="eyebrow">ILHAS, PRAIAS E NOVAS DESCOBERTAS</span><h1>Sua viagem começa<br>com um lugar.</h1><p>Explore Angra no mapa. Salve os lugares que combinam com você e monte seus dias.</p></div><p id="trip-summary"></p>
-<div class="layout"><section class="discover"><section class="map-panel"><h2>Explore Angra dos Reis</h2><div class="map-stage"><div id="map" aria-label="Mapa de Angra dos Reis"></div><div id="card-root" role="group" aria-label="Destino em descoberta"></div>
-<div class="map-float-tools"><button id="map-overview" aria-label="Ver toda a região" title="Ver toda a região">⤢</button><button id="map-expand" aria-expanded="false" aria-label="Ampliar mapa" title="Ampliar mapa">⛶</button></div></div>
-<div class="actions"><button id="previous" aria-label="Voltar ao destino anterior">‹</button><button id="pass" aria-label="Passar" title="Passar">✕</button><button id="like" aria-label="Quero conhecer" title="Quero conhecer">♥</button></div><progress id="discovery-progress" aria-label="Posição no catálogo" max="1" value="0"></progress><p id="counter"></p>
-<p id="map-status"></p><a id="map-link" target="_blank" rel="noopener">Buscar localização no mapa</a></section>
-</section><aside><section class="tone-favorites"><h2>Seus favoritos</h2><div id="favorites"></div></section><section class="tone-route"><h2>Seu roteiro</h2><p>Organize suas escolhas. Deslocamentos e disponibilidade ainda precisam ser confirmados.</p><div id="route"></div><button id="add-day">Adicionar dia</button><button id="copy">Copiar roteiro</button></section>
-<details><summary id="catalog-label">Todos os lugares</summary><label>Buscar destino<input id="search" type="search"></label><div id="catalog"></div></details>
-<section class="tone-partners"><h2>Passeios e parceiros</h2><p>Prepare um pedido de orçamento para enviar quando escolher um parceiro.</p><button id="request">Preparar pedido</button></section></aside></div>
-</main><dialog id="modal" aria-labelledby="modal-title"><button id="close" aria-label="Fechar janela">×</button><div id="modal-content"></div></dialog><p id="notice" role="status" aria-live="polite"></p>
-</body></html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Viva Angra Tour | Passeios em Angra dos Reis</title>
+    <meta
+      name="description"
+      content="Passeios de lancha, ilhas e praias em Angra dos Reis com a Viva Angra Tour. Monte seu roteiro e fale direto pelo WhatsApp."
+    />
+    <meta name="theme-color" content="#021f4f" />
+    <link rel="icon" href="assets/viva-angra-tour-logo.png" type="image/png" />
+    <link rel="preload" as="image" href="assets/cataguases-hero-web.jpg" fetchpriority="high" />
+    <link rel="stylesheet" href="styles.min.css?v=1" />
+  </head>
+  <body>
+    <header class="site-header" aria-label="Topo">
+      <a class="brand" href="#inicio">
+        <span class="brand-logo-wrap">
+          <img src="assets/viva-angra-tour-logo.png?v=2" alt="Viva Angra Tour" width="506" height="424" />
+        </span>
+        <span>
+          <strong>Passeios em Angra</strong>
+          <small>Lancha e Ilha Grande</small>
+        </span>
+      </a>
+
+      <nav class="main-nav" id="main-nav" aria-label="Navegação principal">
+        <a href="#passeios">Passeios</a>
+        <a href="#como-funciona">Como funciona</a>
+        <a href="#roteiro">Roteiro</a>
+        <a href="#duvidas">Dúvidas</a>
+        <a href="#contato">Contato</a>
+        <a href="/app/">Explore Angra</a>
+      </nav>
+
+      <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="main-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <a class="header-action" data-whatsapp-link href="#" target="_blank" rel="noreferrer">
+        Cotar
+      </a>
+    </header>
+
+    <div class="scroll-ocean" data-scroll-ocean aria-hidden="true">
+      <span class="scroll-boat">
+        <svg class="boat-graphic" viewBox="0 0 260 118">
+          <defs>
+            <linearGradient id="boatHullGradient" x1="22" x2="232" y1="64" y2="92" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#021f4f" />
+              <stop offset="0.52" stop-color="#073b7b" />
+              <stop offset="1" stop-color="#00a9d6" />
+            </linearGradient>
+            <linearGradient id="boatCabinGradient" x1="96" x2="166" y1="18" y2="56" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#ffffff" />
+              <stop offset="1" stop-color="#dff7ff" />
+            </linearGradient>
+          </defs>
+          <path class="boat-shadow" d="M34 92 C82 112 180 113 230 90 C185 103 86 104 34 92Z" />
+          <path class="boat-hull" d="M24 66 H246 C235 88 211 99 164 102 H92 C56 100 34 88 24 66Z" />
+          <path class="boat-hull-light" d="M45 72 H222 C210 82 194 87 166 89 H91 C71 88 56 83 45 72Z" />
+          <path class="boat-deck" d="M40 58 H220 C231 58 239 62 244 68 H21 C25 62 31 58 40 58Z" />
+          <path class="boat-cabin" d="M88 25 H155 C175 25 191 39 196 58 H63 C69 39 76 25 88 25Z" />
+          <path class="boat-window" d="M95 33 H121 V50 H83 C86 40 89 35 95 33Z" />
+          <path class="boat-window" d="M128 33 H153 C163 36 171 42 176 50 H128 Z" />
+          <path class="boat-rail" d="M43 60 C79 49 178 48 218 60" />
+          <path class="boat-bow" d="M210 65 L254 48 L236 69" />
+          <path class="boat-stripe" d="M63 84 H190" />
+          <path class="boat-spray" d="M20 78 C-7 75 -30 66 -52 58" />
+          <path class="boat-spray boat-spray-soft" d="M12 91 C-22 98 -58 98 -92 88" />
+        </svg>
+      </span>
+    </div>
+
+    <main id="inicio">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-media" role="img" aria-label="Vista aérea das ilhas e águas claras de Angra dos Reis"></div>
+        <div class="hero-overlay"></div>
+        <span class="hero-watermark hero-watermark-viva" aria-hidden="true">VIVA</span>
+        <span class="hero-watermark hero-watermark-angra" aria-hidden="true">Angra</span>
+
+        <div class="hero-content">
+          <div class="hero-copy-block">
+            <div class="hero-topline" aria-label="Resumo dos passeios">
+              <span>06 roteiros</span>
+              <span>Angra + Ilha Grande</span>
+              <span>média de 6h</span>
+            </div>
+            <p class="eyebrow">Passeios locais em Angra dos Reis</p>
+            <h1 id="hero-title" class="hero-brand-name">
+              <span class="hero-brand-viva">Viva</span>
+              <span class="hero-brand-angra">Angra</span>
+              <span class="hero-brand-tour">Tour</span>
+            </h1>
+            <p class="hero-copy">
+              Roteiros de lancha em Angra e Ilha Grande, com atendimento direto, saídas combinadas e cotação pelo WhatsApp.
+            </p>
+
+            <ul class="hero-points" aria-label="Destaques">
+              <li>Privativo ou compartilhado</li>
+              <li>Ilhas Paradisíacas, Lagoa Azul e Lado Frade</li>
+              <li>Cotação organizada pelo WhatsApp</li>
+            </ul>
+
+            <div class="hero-actions" aria-label="Ações principais">
+              <a class="button button-primary" href="#roteiro">Montar meu passeio</a>
+              <a class="button button-secondary" data-whatsapp-link href="#" target="_blank" rel="noreferrer">Falar com a Viva Angra</a>
+            </div>
+          </div>
+
+          <aside class="hero-showcase" aria-label="Destaques visuais dos roteiros">
+            <div class="hero-showcase-label" aria-hidden="true">
+              <span>Roteiros em destaque</span>
+              <strong>Angra dos Reis</strong>
+            </div>
+            <div class="hero-route-carousel" aria-label="Roteiros em destaque">
+              <figure class="hero-route-card" style="--card: 0">
+                <img src="assets/ilhas-botinas.jpg" decoding="async" loading="eager" fetchpriority="high" alt="Ilhas Botinas vistas do mar" />
+                <figcaption>
+                  <span>Banho e almoço</span>
+                  <strong>Ilhas Paradisíacas</strong>
+                </figcaption>
+              </figure>
+
+              <figure class="hero-route-card" style="--card: 1">
+                <img src="assets/lagoa-azul.jpg" decoding="async" loading="lazy" alt="Lagoa Azul em Ilha Grande" />
+                <figcaption>
+                  <span>Roteiro para snorkel</span>
+                  <strong>Lagoa Azul</strong>
+                </figcaption>
+              </figure>
+
+              <figure class="hero-route-card" style="--card: 2">
+                <img src="assets/itanhaga-lado-frade.jpg" decoding="async" loading="lazy" alt="Itanhagá no roteiro Lado Frade" />
+                <figcaption>
+                  <span>Saída pelo Frade</span>
+                  <strong>Lado Frade</strong>
+                </figcaption>
+              </figure>
+
+              <figure class="hero-route-card" style="--card: 3">
+                <img src="assets/lopes-mendes.jpg" decoding="async" loading="lazy" alt="Praia de Lopes Mendes vista do alto" />
+                <figcaption>
+                  <span>Ilha Grande</span>
+                  <strong>Lopes Mendes</strong>
+                </figcaption>
+              </figure>
+
+              <figure class="hero-route-card" style="--card: 4">
+                <img src="assets/praia-do-aventureiro.jpg" decoding="async" loading="lazy" alt="Praia do Aventureiro com coqueiro e mar claro" />
+                <figcaption>
+                  <span>Dia especial</span>
+                  <strong>Praia do Aventureiro</strong>
+                </figcaption>
+              </figure>
+
+              <figure class="hero-route-card" style="--card: 5">
+                <img src="assets/vila-do-abraao.jpg" decoding="async" loading="lazy" alt="Vista aérea da Vila do Abraão, Ilha Grande" />
+                <figcaption>
+                  <span>Vila e praias próximas</span>
+                  <strong>Abraão</strong>
+                </figcaption>
+              </figure>
+            </div>
+
+            <div class="hero-stat">
+              <span>Duração média</span>
+              <strong>6 horas</strong>
+            </div>
+
+            <div class="hero-route-note">
+              <span>Saídas</span>
+              <strong>Frade, Centro, Abraão e Araçatiba</strong>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="route-strip" aria-label="Resumo dos roteiros">
+        <div>
+          <strong>Duração média</strong>
+          <span>Passeios com cerca de 6 horas</span>
+        </div>
+        <div>
+          <strong>Saídas em Angra</strong>
+          <span>Frade, Garatucaia e Centro de Angra</span>
+        </div>
+        <div>
+          <strong>Saídas na Ilha Grande</strong>
+          <span>Abraão, Praia Vermelha e Araçatiba</span>
+        </div>
+      </section>
+
+      <section class="section section-intro" id="passeios" aria-labelledby="passeios-title">
+        <div class="section-heading">
+          <p class="eyebrow">Passeios</p>
+          <h2 id="passeios-title">Escolha seu roteiro</h2>
+          <p>
+            Cada rota tem uma pegada: banho em água clara, snorkel, praias da Ilha Grande, almoço à beira-mar ou um dia mais reservado pelo lado do Frade.
+          </p>
+        </div>
+
+        <div class="route-gallery" aria-label="Galeria de roteiros em Angra dos Reis">
+          <div class="route-gallery-track">
+            <figure class="route-photo-card">
+              <img src="assets/cataguases-hero-web.jpg" decoding="async" loading="lazy" alt="Vista aérea de Cataguases e águas claras" />
+              <figcaption>
+                <strong>Cataguases</strong>
+                <span>Água clara e banco de areia</span>
+              </figcaption>
+            </figure>
+            <figure class="route-photo-card">
+              <img src="assets/ilhas-botinas.jpg" decoding="async" loading="lazy" alt="Ilhas Botinas vistas do mar" />
+              <figcaption>
+                <strong>Ilhas Botinas</strong>
+                <span>Água clara perto da Gipóia</span>
+              </figcaption>
+            </figure>
+            <figure class="route-photo-card">
+              <img src="assets/lagoa-azul.jpg" decoding="async" loading="lazy" alt="Lagoa Azul com água clara e montanhas" />
+              <figcaption>
+                <strong>Lagoa Azul</strong>
+                <span>Snorkel e água turquesa</span>
+              </figcaption>
+            </figure>
+            <figure class="route-photo-card">
+              <img src="assets/cataguases-hero-web.jpg" decoding="async" loading="lazy" alt="Ilhas e areia clara vistas de cima" />
+              <figcaption>
+                <strong>Ilhas Paradisíacas</strong>
+                <span>Gipóia, Botinas e almoço</span>
+              </figcaption>
+            </figure>
+            <figure class="route-photo-card">
+              <img src="assets/itanhaga-lado-frade.jpg" decoding="async" loading="lazy" alt="Itanhagá no roteiro Lado Frade" />
+              <figcaption>
+                <strong>Lado Frade</strong>
+                <span>Itanhagá e lado do Frade</span>
+              </figcaption>
+            </figure>
+            <figure class="route-photo-card">
+              <img src="assets/lopes-mendes.jpg" decoding="async" loading="lazy" alt="Praia de Lopes Mendes vista do alto" />
+              <figcaption>
+                <strong>Lopes Mendes</strong>
+                <span>Praia oceânica e selvagem</span>
+              </figcaption>
+            </figure>
+            <figure class="route-photo-card">
+              <img src="assets/praia-do-aventureiro.jpg" decoding="async" loading="lazy" alt="Praia do Aventureiro com coqueiro e mar claro" />
+              <figcaption>
+                <strong>Praia do Aventureiro</strong>
+                <span>Coqueiro famoso e mar aberto</span>
+              </figcaption>
+            </figure>
+            <figure class="route-photo-card">
+            <img src="assets/vila-do-abraao.jpg" decoding="async" loading="lazy" alt="Vista aérea da Vila do Abraão, Ilha Grande" />
+              <figcaption>
+                <strong>Abraão</strong>
+                <span>Vila, cais e praias próximas</span>
+              </figcaption>
+            </figure>
+            <figure class="route-photo-card" aria-hidden="true">
+              <img src="assets/cataguases-hero-web.jpg" decoding="async" loading="lazy" alt="" />
+              <figcaption>
+                <strong>Cataguases</strong>
+                <span>Água clara e banco de areia</span>
+              </figcaption>
+            </figure>
+            <figure class="route-photo-card" aria-hidden="true">
+              <img src="assets/ilhas-botinas.jpg" decoding="async" loading="lazy" alt="" />
+              <figcaption>
+                <strong>Ilhas Botinas</strong>
+                <span>Água clara perto da Gipóia</span>
+              </figcaption>
+            </figure>
+            <figure class="route-photo-card" aria-hidden="true">
+              <img src="assets/lagoa-azul.jpg" decoding="async" loading="lazy" alt="" />
+              <figcaption>
+                <strong>Lagoa Azul</strong>
+                <span>Snorkel e água turquesa</span>
+              </figcaption>
+            </figure>
+            <figure class="route-photo-card" aria-hidden="true">
+              <img src="assets/cataguases-hero-web.jpg" decoding="async" loading="lazy" alt="" />
+              <figcaption>
+                <strong>Ilhas Paradisíacas</strong>
+                <span>Gipóia, Botinas e almoço</span>
+              </figcaption>
+            </figure>
+            <figure class="route-photo-card" aria-hidden="true">
+              <img src="assets/itanhaga-lado-frade.jpg" decoding="async" loading="lazy" alt="" />
+              <figcaption>
+                <strong>Lado Frade</strong>
+                <span>Itanhagá e lado do Frade</span>
+              </figcaption>
+            </figure>
+            <figure class="route-photo-card" aria-hidden="true">
+              <img src="assets/lopes-mendes.jpg" decoding="async" loading="lazy" alt="" />
+              <figcaption>
+                <strong>Lopes Mendes</strong>
+                <span>Praia oceânica e selvagem</span>
+              </figcaption>
+            </figure>
+            <figure class="route-photo-card" aria-hidden="true">
+              <img src="assets/praia-do-aventureiro.jpg" decoding="async" loading="lazy" alt="" />
+              <figcaption>
+                <strong>Praia do Aventureiro</strong>
+                <span>Coqueiro famoso e mar aberto</span>
+              </figcaption>
+            </figure>
+            <figure class="route-photo-card" aria-hidden="true">
+              <img src="assets/vila-do-abraao.jpg" decoding="async" loading="lazy" alt="" />
+              <figcaption>
+                <strong>Abraão</strong>
+                <span>Vila, cais e praias próximas</span>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="tour-grid">
+          <article class="tour-card">
+            <img src="assets/ilhas-botinas.jpg" decoding="async" loading="lazy" alt="Ilhas Botinas vistas do mar" />
+            <div class="tour-card-body">
+              <div>
+                <p class="tag">Ilhas Paradisíacas</p>
+                <h3>Ilhas Paradisíacas</h3>
+              </div>
+              <p>Um clássico de Angra: banho nas Botinas, praias da Gipóia e almoço no Canto das Canoas, com tempo para fotos e paradas tranquilas.</p>
+              <ul class="tour-highlights">
+                <li>Botinas para banho</li>
+                <li>Flechas, Fazenda e Piedade</li>
+                <li>Almoço no Canto das Canoas</li>
+              </ul>
+              <div class="tour-price">
+                <strong>Valor sob consulta</strong>
+                <span>Cotação por data, saída e tamanho do grupo</span>
+              </div>
+              <dl>
+                <div>
+                  <dt>Duração</dt>
+                  <dd>Média de 6 horas</dd>
+                </div>
+                <div>
+                  <dt>Perfil</dt>
+                  <dd>Banho e almoço</dd>
+                </div>
+              </dl>
+              <a class="text-link" data-tour-link="Ilhas Paradisíacas" href="#">Pedir cotação</a>
+            </div>
+          </article>
+
+          <article class="tour-card">
+            <img src="assets/lagoa-azul.jpg" decoding="async" loading="lazy" alt="Lagoa Azul com água clara e montanhas" />
+            <div class="tour-card-body">
+              <div>
+                <p class="tag">Lagoa Azul</p>
+                <h3>Roteiro Lagoa Azul</h3>
+              </div>
+              <p>Rota para quem quer água azul, máscara de snorkel e paradas rápidas para banho: Lagoa Azul, Grumixama, Freguesia de Santana e Cataguases.</p>
+              <ul class="tour-highlights">
+                <li>Snorkel na Lagoa Azul</li>
+                <li>Freguesia de Santana</li>
+                <li>Cataguases para fotos</li>
+              </ul>
+              <div class="tour-price">
+                <strong>Valor sob consulta</strong>
+                <span>Cotação por data, saída e tamanho do grupo</span>
+              </div>
+              <dl>
+                <div>
+                  <dt>Duração</dt>
+                  <dd>Média de 6 horas</dd>
+                </div>
+                <div>
+                  <dt>Perfil</dt>
+                  <dd>Snorkel e banho</dd>
+                </div>
+              </dl>
+              <a class="text-link" data-tour-link="Roteiro Lagoa Azul" href="#">Pedir cotação</a>
+            </div>
+          </article>
+
+          <article class="tour-card">
+            <img src="assets/itanhaga-lado-frade.jpg" decoding="async" loading="lazy" alt="Itanhagá no roteiro Lado Frade" />
+            <div class="tour-card-body">
+              <div>
+                <p class="tag">Lado Frade</p>
+                <h3>Roteiro Lado Frade</h3>
+              </div>
+              <p>Boa opção para sair pelo Frade, com menos deslocamento e visual de costão: Pingo d'Água, Paquetá, Laboratório e Itanhagá.</p>
+              <ul class="tour-highlights">
+                <li>Costão de Itanhagá</li>
+                <li>Paquetá e Pingo d'Água</li>
+                <li>Praia do Laboratório</li>
+              </ul>
+              <div class="tour-price">
+                <strong>Valor sob consulta</strong>
+                <span>Cotação por data, saída e tamanho do grupo</span>
+              </div>
+              <dl>
+                <div>
+                  <dt>Duração</dt>
+                  <dd>Média de 6 horas</dd>
+                </div>
+                <div>
+                  <dt>Perfil</dt>
+                  <dd>Região do Frade</dd>
+                </div>
+              </dl>
+              <a class="text-link" data-tour-link="Roteiro Lado Frade" href="#">Pedir cotação</a>
+            </div>
+          </article>
+
+          <article class="tour-card">
+            <img src="assets/lopes-mendes.jpg" decoding="async" loading="lazy" alt="Praia de Lopes Mendes vista do alto" />
+            <div class="tour-card-body">
+              <div>
+                <p class="tag">Ilha Grande</p>
+                <h3>Lopes Mendes</h3>
+              </div>
+              <p>Uma das praias mais famosas da Ilha Grande: faixa longa de areia clara, mar oceânico e visual preservado. Acesso sempre alinhado ao mar do dia.</p>
+              <ul class="tour-highlights">
+                <li>Areia clara e praia extensa</li>
+                <li>Mar oceânico</li>
+                <li>Natureza preservada</li>
+              </ul>
+              <div class="tour-price">
+                <strong>Valor sob consulta</strong>
+                <span>Cotação por saída, mar e logística do dia</span>
+              </div>
+              <dl>
+                <div>
+                  <dt>Duração</dt>
+                  <dd>Média de 6 horas</dd>
+                </div>
+                <div>
+                  <dt>Perfil</dt>
+                  <dd>Praia selvagem</dd>
+                </div>
+              </dl>
+              <a class="text-link" data-tour-link="Lopes Mendes" href="#">Pedir cotação</a>
+            </div>
+          </article>
+
+          <article class="tour-card">
+            <img src="assets/praia-do-aventureiro.jpg" decoding="async" loading="lazy" alt="Praia do Aventureiro com coqueiro e mar claro" />
+            <div class="tour-card-body">
+              <div>
+                <p class="tag">Ilha Grande</p>
+                <h3>Praia do Aventureiro</h3>
+              </div>
+              <p>Roteiro para o lado mais preservado da Ilha Grande, com o coqueiro famoso, comunidade caiçara e navegação confirmada conforme mar e logística.</p>
+              <ul class="tour-highlights">
+                <li>Coqueiro do Aventureiro</li>
+                <li>Comunidade caiçara</li>
+                <li>Mar e logística alinhados</li>
+              </ul>
+              <div class="tour-price">
+                <strong>Valor sob consulta</strong>
+                <span>Cotação conforme embarque e previsão</span>
+              </div>
+              <dl>
+                <div>
+                  <dt>Duração</dt>
+                  <dd>Média de 6 horas</dd>
+                </div>
+                <div>
+                  <dt>Perfil</dt>
+                  <dd>Dia especial</dd>
+                </div>
+              </dl>
+              <a class="text-link" data-tour-link="Praia do Aventureiro" href="#">Pedir cotação</a>
+            </div>
+          </article>
+
+          <article class="tour-card">
+            <img src="assets/vila-do-abraao.jpg" decoding="async" loading="lazy" alt="Vista aérea da Vila do Abraão, Ilha Grande" />
+            <div class="tour-card-body">
+              <div>
+                <p class="tag">Ilha Grande</p>
+                <h3>Abraão</h3>
+              </div>
+              <p>A porta de entrada da Ilha Grande: vila com cais, restaurantes, movimento de barcos e praias próximas para um passeio mais leve e estruturado.</p>
+              <ul class="tour-highlights">
+                <li>Vila e cais do Abraão</li>
+                <li>Praias próximas</li>
+                <li>Estrutura na ilha</li>
+              </ul>
+              <div class="tour-price">
+                <strong>Valor sob consulta</strong>
+                <span>Cotação por grupo e ponto de saída</span>
+              </div>
+              <dl>
+                <div>
+                  <dt>Duração</dt>
+                  <dd>Média de 6 horas</dd>
+                </div>
+                <div>
+                  <dt>Perfil</dt>
+                  <dd>Primeira vez</dd>
+                </div>
+              </dl>
+              <a class="text-link" data-tour-link="Abraão" href="#">Pedir cotação</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section mood-section" aria-labelledby="mood-title">
+        <div class="mood-copy">
+          <p class="eyebrow">Experiência</p>
+          <h2 id="mood-title">Angra no ritmo do seu grupo</h2>
+          <p>Nem todo passeio precisa ter o mesmo ritmo. A gente ajuda a escolher entre um dia de snorkel, praias de mar calmo, almoço na Gipóia ou rotas mais preservadas da Ilha Grande.</p>
+          <ul class="mood-list" aria-label="Tipos de experiência">
+            <li>Banho e fotos em água clara</li>
+            <li>Paradas com estrutura para almoço</li>
+            <li>Roteiros ajustados ao mar do dia</li>
+          </ul>
+        </div>
+
+        <div class="mood-visuals" aria-label="Momentos do passeio">
+          <figure class="mood-card mood-card-wide">
+            <img src="assets/cataguases-hero-web.jpg" decoding="async" loading="lazy" alt="Água clara e ilhas vistas de cima" />
+            <figcaption>
+              <span>01</span>
+              <div>
+                <strong>Água clara</strong>
+                <small>Paradas para banho, fotos e snorkel quando o mar ajuda.</small>
+              </div>
+            </figcaption>
+          </figure>
+          <figure class="mood-card">
+            <img src="assets/ilhas-botinas.jpg" decoding="async" loading="lazy" alt="Ilhas Botinas em Angra dos Reis" />
+            <figcaption>
+              <span>02</span>
+              <div>
+                <strong>Paradas clássicas</strong>
+                <small>Botinas, Gipóia e praias queridas de Angra.</small>
+              </div>
+            </figcaption>
+          </figure>
+          <figure class="mood-card">
+            <img src="assets/angra-panorama.jpg" decoding="async" loading="lazy" alt="Barcos, praia e ilhas em Angra" />
+            <figcaption>
+              <span>03</span>
+              <div>
+                <strong>Saídas flexíveis</strong>
+                <small>Frade, Centro, Garatucaia e pontos da Ilha Grande.</small>
+              </div>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section confidence" aria-labelledby="confidence-title">
+        <div class="section-heading compact">
+          <p class="eyebrow">Por que fechar com a gente</p>
+          <h2 id="confidence-title">Escolha com clareza</h2>
+        </div>
+
+        <div class="confidence-grid">
+          <div>
+            <span class="number">01</span>
+            <h3>Atendimento local</h3>
+            <p>Clima, maré, saída e perfil do passeio alinhados antes da reserva.</p>
+          </div>
+          <div>
+            <span class="number">02</span>
+            <h3>Cotação objetiva</h3>
+            <p>Valor, duração, ponto de encontro e itens inclusos em uma mensagem clara.</p>
+          </div>
+          <div>
+            <span class="number">03</span>
+            <h3>Roteiro ajustável</h3>
+            <p>Privativo, casal, família ou grupo: o ritmo acompanha sua viagem.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section process" id="como-funciona" aria-labelledby="process-title">
+        <div class="section-heading">
+          <p class="eyebrow">Como funciona</p>
+          <h2 id="process-title">Da ideia ao embarque</h2>
+          <p>
+            Você manda o básico, recebe a melhor opção e confirma tudo pelo WhatsApp.
+          </p>
+        </div>
+
+        <div class="process-list">
+          <article>
+            <span>01</span>
+            <h3>Você manda data, grupo e saída</h3>
+            <p>Diga data, pessoas e ponto de saída.</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>A gente sugere o roteiro</h3>
+            <p>Indicamos roteiro, paradas e melhor horário.</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>Fechamos os detalhes</h3>
+            <p>Confirmamos valor, embarcação e itens inclusos.</p>
+          </article>
+          <article>
+            <span>04</span>
+            <h3>É só chegar para embarcar</h3>
+            <p>No dia, é só chegar no ponto combinado.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section essentials" aria-labelledby="essentials-title">
+        <div>
+          <p class="eyebrow">Antes de sair</p>
+          <h2 id="essentials-title">Leve o essencial</h2>
+        </div>
+
+        <div class="essentials-grid">
+          <article>
+            <h3>Bom levar</h3>
+            <ul>
+              <li>Documento, protetor solar e toalha</li>
+              <li>Roupa leve e troca seca</li>
+              <li>Água e remédio pessoal</li>
+            </ul>
+          </article>
+          <article>
+            <h3>Combinamos antes</h3>
+            <ul>
+              <li>Frade, Garatucaia e Centro de Angra</li>
+              <li>Ilha Grande: Abraão, Praia Vermelha e Araçatiba</li>
+              <li>Roteiro, duração e extras combinados antes</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section planner" id="roteiro" aria-labelledby="planner-title">
+        <div class="planner-copy">
+          <p class="eyebrow">Comece por aqui</p>
+          <h2 id="planner-title">Monte sua cotação</h2>
+          <p>
+            Preencha o básico e envie uma mensagem pronta. A resposta vem com disponibilidade, valor e detalhes do embarque.
+          </p>
+        </div>
+
+        <form class="quote-form" id="quote-form">
+          <label>
+            Nome
+            <input type="text" name="name" autocomplete="name" placeholder="Seu nome" required />
+          </label>
+
+          <label>
+            Data desejada
+            <input type="date" name="date" required />
+          </label>
+
+          <label>
+            Pessoas
+            <input type="number" name="people" min="1" max="40" value="2" required />
+          </label>
+
+          <label>
+            Tipo de passeio
+            <select name="tour" required>
+              <option value="Ilhas Paradisíacas">Ilhas Paradisíacas</option>
+              <option value="Roteiro Lagoa Azul">Roteiro Lagoa Azul</option>
+              <option value="Roteiro Lado Frade">Roteiro Lado Frade</option>
+              <option value="Lopes Mendes">Lopes Mendes</option>
+              <option value="Praia do Aventureiro">Praia do Aventureiro</option>
+              <option value="Abraão">Abraão</option>
+              <option value="Ainda quero ajuda para escolher">Ainda quero ajuda para escolher</option>
+            </select>
+          </label>
+
+          <label>
+            Ponto de saída
+            <select name="departure" required>
+              <option value="Ainda quero ajuda para escolher">Ainda quero ajuda para escolher</option>
+              <option value="Frade">Frade</option>
+              <option value="Garatucaia">Garatucaia</option>
+              <option value="Centro de Angra">Centro de Angra</option>
+              <option value="Ilha Grande - Abraão">Ilha Grande - Abraão</option>
+              <option value="Ilha Grande - Praia Vermelha">Ilha Grande - Praia Vermelha</option>
+              <option value="Ilha Grande - Araçatiba">Ilha Grande - Araçatiba</option>
+            </select>
+          </label>
+
+          <label class="wide">
+            Observações
+            <textarea name="notes" rows="4" placeholder="Ex.: criança pequena, aniversário, preferência por passeio privativo..."></textarea>
+          </label>
+
+          <div class="form-summary" aria-live="polite">
+            <strong>Mensagem pronta</strong>
+            <p id="message-preview">Preencha os campos para gerar seu pedido de cotação.</p>
+          </div>
+
+          <button class="button button-primary wide" type="submit">Enviar pelo WhatsApp</button>
+        </form>
+      </section>
+
+      <section class="closing-cta" aria-labelledby="closing-title">
+        <div>
+          <p class="eyebrow">Próximo passo</p>
+          <h2 id="closing-title">Quer encaminhar seu passeio hoje?</h2>
+          <p>Mande data, grupo e roteiro. A gente organiza a melhor opção para você.</p>
+        </div>
+        <a class="button button-primary" data-whatsapp-link href="#" target="_blank" rel="noreferrer">Começar cotação</a>
+      </section>
+
+      <section class="section faq" id="duvidas" aria-labelledby="faq-title">
+        <div class="section-heading">
+          <p class="eyebrow">Dúvidas comuns</p>
+          <h2 id="faq-title">Antes de reservar</h2>
+        </div>
+
+        <div class="faq-list">
+          <details>
+            <summary>Os passeios dependem do clima?</summary>
+            <p>Sim. Vento, chuva e condição do mar definem confirmação ou ajuste do roteiro.</p>
+          </details>
+          <details>
+            <summary>Quanto tempo dura o passeio?</summary>
+            <p>Em média 6 horas; pode variar por saída, roteiro e mar.</p>
+          </details>
+          <details>
+            <summary>Vocês fazem passeio privativo?</summary>
+            <p>Sim. O privativo permite escolher ritmo, horário, paradas e embarcação.</p>
+          </details>
+          <details>
+            <summary>Quais roteiros posso escolher?</summary>
+            <p>Ilhas Paradisíacas combina Botinas, Gipóia e almoço; Lagoa Azul é para snorkel; Lado Frade favorece quem sai do Frade; Lopes Mendes e Aventureiro são mais selvagens; Abraão é o roteiro mais estruturado da Ilha Grande.</p>
+          </details>
+          <details>
+            <summary>O valor já inclui tudo?</summary>
+            <p>É sob consulta. A proposta informa embarcação, marinheiro, combustível, taxas e extras.</p>
+          </details>
+          <details>
+            <summary>De onde saem os passeios?</summary>
+            <p>Frade, Garatucaia, Centro de Angra e Ilha Grande: Abraão, Praia Vermelha e Araçatiba.</p>
+          </details>
+        </div>
+      </section>
+
+      <section class="section contact" id="contato" aria-labelledby="contact-title">
+        <div class="contact-panel">
+          <div class="contact-panel-copy">
+            <p class="eyebrow">Contato</p>
+            <h2 id="contact-title">Pronto para escolher seu roteiro?</h2>
+            <p>
+              Mande data, grupo e saída. A gente responde com disponibilidade, valor e melhor roteiro.
+            </p>
+            <div class="contact-actions" aria-label="Canais de contato">
+              <a class="button button-primary" data-whatsapp-link href="#" target="_blank" rel="noreferrer">Chamar no WhatsApp</a>
+              <a class="button button-secondary contact-instagram" data-instagram-link href="https://www.instagram.com/vivaangratour/" target="_blank" rel="noreferrer">Ver Instagram</a>
+            </div>
+          </div>
+
+          <div class="contact-panel-info" aria-label="Informações rápidas">
+            <div>
+              <span>Tempo médio</span>
+              <strong>6 horas</strong>
+            </div>
+            <div>
+              <span>Saídas</span>
+              <strong>Angra e Ilha Grande</strong>
+            </div>
+            <div>
+              <span>Instagram</span>
+              <strong>@vivaangratour</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <strong>Viva Angra Tour</strong>
+        <span>Passeios em Angra dos Reis, RJ</span>
+      </div>
+      <a data-whatsapp-link href="#" target="_blank" rel="noreferrer">Falar no WhatsApp</a>
+    </footer>
+
+    <a class="floating-whatsapp" data-whatsapp-link href="#" target="_blank" rel="noreferrer" aria-label="Falar com a Viva Angra Tour pelo WhatsApp">
+      <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+        <path d="M16.02 4.01c-6.62 0-12 5.23-12 11.68 0 2.16.62 4.27 1.8 6.1L4 28l6.45-1.7a12.4 12.4 0 0 0 5.57 1.33c6.62 0 12-5.23 12-11.68S22.64 4.01 16.02 4.01Zm0 21.6c-1.78 0-3.52-.46-5.04-1.34l-.36-.21-3.83 1.01 1.02-3.62-.24-.37a9.66 9.66 0 0 1-1.51-5.16c0-5.34 4.47-9.69 9.96-9.69s9.96 4.35 9.96 9.69-4.47 9.69-9.96 9.69Zm5.46-7.26c-.3-.15-1.76-.85-2.03-.94-.27-.1-.47-.15-.67.15-.2.29-.77.94-.94 1.13-.17.2-.35.22-.65.07-.3-.15-1.27-.45-2.41-1.44-.89-.77-1.49-1.72-1.66-2.01-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.29.3-.49.1-.2.05-.37-.02-.52-.07-.15-.67-1.58-.92-2.16-.24-.56-.49-.49-.67-.5h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1-1.04 2.43s1.07 2.82 1.22 3.02c.15.2 2.11 3.13 5.12 4.39.72.3 1.28.48 1.71.61.72.22 1.38.19 1.9.12.58-.08 1.76-.7 2.01-1.38.25-.68.25-1.26.17-1.38-.07-.13-.27-.2-.57-.35Z" />
+      </svg>
+      <span class="sr-only">Falar no WhatsApp</span>
+    </a>
+
+    <script src="script.js?v=8"></script>
+  </body>
+</html>
