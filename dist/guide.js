@@ -4,8 +4,8 @@ const guideCategory = document.querySelector("#guide-category");
 const guideGrid = document.querySelector("#guide-grid");
 const guideCount = document.querySelector("#guide-count");
 const guideMore = document.querySelector("#guide-more");
-const guideDialog = document.querySelector("#guide-dialog");
-const guideDialogContent = document.querySelector("#guide-dialog-content");
+const destinationContent = document.querySelector("#destination-content");
+const guideParams = new URLSearchParams(window.location.search);
 const guideBatch = 12;
 let guideLimit = guideBatch;
 
@@ -71,11 +71,14 @@ function placeImage(url) {
   return image;
 }
 
-function openGuidePlace(place, title) {
-  const heading = guideElement("h2", title);
-  heading.id = "guide-dialog-title";
-  guideDialogContent.replaceChildren(heading);
-  const localPhoto = localPhotos.get(place.name);
+function destinationSlug(name) {
+  return normalizeGuideText(name).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+function renderDestination(place) {
+  document.querySelector("#destination-title").textContent = place.name;
+  document.title = place.name + " | Viva Angra Tour";
+  const localPhoto = place.gallery?.[0] ?? localPhotos.get(place.name);
   const photoUrl = localPhoto ? "assets/" + localPhoto : place.photoUrl;
   if (photoUrl) {
     const image = placeImage(photoUrl);
@@ -87,18 +90,18 @@ function openGuidePlace(place, title) {
       ? (place.name === "Pico do Frade" ? "Foto: @caminhosdemambucaba" : "")
       : place.photoCredit;
     const credit = photoCredit ? guideElement("small", photoCredit) : null;
-    guideDialogContent.append(image);
-    if (credit) guideDialogContent.append(credit);
+    destinationContent.append(image);
+    if (credit) destinationContent.append(credit);
   }
-  if (place.description) guideDialogContent.append(guideElement("p", place.description));
+  if (place.description) destinationContent.append(guideElement("p", place.description));
   if (place.access) {
-    guideDialogContent.append(guideElement("h3", "Como chegar"), guideElement("p", place.access));
+    destinationContent.append(guideElement("h3", "Como chegar"), guideElement("p", place.access));
   }
   if (place.visitNotes) {
-    guideDialogContent.append(guideElement("h3", "Relatos de visitantes"), guideElement("p", place.visitNotes));
+    destinationContent.append(guideElement("h3", "Relatos de visitantes"), guideElement("p", place.visitNotes));
   }
   if (place.gallery?.length) {
-    const gallery = guideElement("details", "", "guide-place-gallery");
+    const gallery = guideElement("section", "", "guide-place-gallery");
     const photos = guideElement("div");
     for (const filename of place.gallery) {
       const image = placeImage("assets/" + filename);
@@ -106,11 +109,11 @@ function openGuidePlace(place, title) {
       photos.append(image);
     }
     gallery.append(
-      guideElement("summary", "Galeria da " + place.name + " (" + place.gallery.length + " fotos)"),
+      guideElement("h2", "Galeria da " + place.name + " (" + place.gallery.length + " fotos)"),
       photos,
       guideElement("small", "Fotos do acervo Experiências Viva Angra.")
     );
-    guideDialogContent.append(gallery);
+    destinationContent.append(gallery);
   }
   const links = guideElement("nav");
   links.setAttribute("aria-label", "Links do destino");
@@ -119,24 +122,31 @@ function openGuidePlace(place, title) {
     links.append(guideLink("Ver localização no Google Maps", "https://www.google.com/maps/search/?api=1&query=" + coordinates));
   }
   links.append(guideLink("Abrir mapa e roteiro da Viva Angra Tour", "app/index.html"));
-  guideDialogContent.append(links);
-  guideDialog.showModal();
+  destinationContent.append(links);
 }
 
-function placeButton(place, title, featured) {
-  const button = guideElement("button", "", featured ? "guide-feature" : "guide-place");
-  button.type = "button";
-  if (featured) button.append(placeImage("assets/" + localPhotos.get(place.name)));
-  button.append(guideElement("span", placeCategory(place.name)), guideElement("strong", title));
-  button.addEventListener("click", () => openGuidePlace(place, title));
-  return button;
+function placeLink(place, title, featured) {
+  const link = guideElement("a", "", featured ? "guide-feature" : "guide-place");
+  link.href = "destino.html?lugar=" + destinationSlug(place.name);
+  if (featured) link.append(placeImage("assets/" + localPhotos.get(place.name)));
+  link.append(guideElement("span", placeCategory(place.name)), guideElement("strong", title));
+  return link;
+}
+
+if (destinationContent) {
+  const place = guidePlaces.find((entry) => destinationSlug(entry.name) === guideParams.get("lugar"));
+  if (place) renderDestination(place);
+  else {
+    document.querySelector("#destination-title").textContent = "Destino não encontrado";
+    destinationContent.append(guideLink("Voltar ao guia de destinos", "onde-ir.html"));
+  }
 }
 
 if (guideGrid) {
   const guideFeatured = document.querySelector("#guide-featured");
   for (const [name, title] of guideHighlights) {
     const place = guidePlaces.find((entry) => entry.name === name);
-    if (place) guideFeatured.append(placeButton(place, title, true));
+    if (place) guideFeatured.append(placeLink(place, title, true));
   }
 
   const guideEntries = guidePlaces.map((place) => ({
@@ -153,7 +163,7 @@ if (guideGrid) {
     );
     const start = append ? guideGrid.childElementCount : 0;
     if (!append) guideGrid.replaceChildren();
-    guideGrid.append(...matches.slice(start, guideLimit).map(({ place }) => placeButton(place, place.name, false)));
+    guideGrid.append(...matches.slice(start, guideLimit).map(({ place }) => placeLink(place, place.name, false)));
     const shown = Math.min(guideLimit, matches.length);
     guideCount.textContent = matches.length
       ? shown + " de " + matches.length + (matches.length === 1 ? " destino" : " destinos")
@@ -173,12 +183,9 @@ if (guideGrid) {
     guideLimit += guideBatch;
     renderGuide({ append: true });
   });
-  renderGuide();
-  for (const link of document.querySelectorAll("[data-guide-filter]")) {
-    link.addEventListener("click", () => {
-      guideSearch.value = "";
-      guideCategory.value = link.dataset.guideFilter;
-      resetGuide();
-    });
+  const initialCategory = guideParams.get("categoria");
+  if ([...guideCategory.options].some((option) => option.value === initialCategory)) {
+    guideCategory.value = initialCategory;
   }
+  renderGuide();
 }

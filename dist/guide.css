@@ -305,3 +305,18 @@ summary.listing-preview:focus-visible { outline: 3px solid #087b85; outline-offs
 .guide-place-gallery summary { cursor: pointer; font-weight: 700; }
 .guide-place-gallery > div { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-block: 10px; }
 .guide-place-gallery img { display: block; aspect-ratio: 4 / 3; }
+a.guide-feature, a.guide-place { text-decoration: none; }
+a.guide-feature:hover strong, a.guide-place:hover strong { text-decoration: underline; text-underline-offset: 4px; }
+.destination-content { color: var(--vat-texto); }
+.destination-content > p { max-width: 68ch; }
+.destination-content > img {
+  display: block;
+  width: min(100%, 880px);
+  max-height: 460px;
+  object-fit: cover;
+  border-radius: var(--vat-raio);
+}
+.destination-content > small { display: block; margin-top: 6px; }
+.destination-content nav { display: flex; flex-wrap: wrap; gap: 12px 22px; }
+.destination-content .guide-place-gallery > div { grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
+.destination-content .guide-place-gallery img { width: 100%; height: auto; object-fit: cover; border-radius: 10px; }

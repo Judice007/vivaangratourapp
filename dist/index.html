@@ -12,11 +12,11 @@
     <link rel="icon" href="assets/viva-angra-tour-logo.png" type="image/png" />
     <link rel="preload" as="image" href="assets/angra-panorama.jpg" fetchpriority="high" />
     <link rel="stylesheet" href="styles.min.css?v=1" />
-    <link rel="stylesheet" href="guide.css?v=10" />
+    <link rel="stylesheet" href="guide.css?v=11" />
     <link rel="stylesheet" href="assets/brand-tokens.css">
     <link rel="stylesheet" href="brand.css?v=4">
     <script src="app/data.js?v=3" defer></script>
-    <script src="guide.js?v=5" defer></script>
+    <script src="guide.js?v=6" defer></script>
     <script src="directory-data.js?v=5" defer></script>
     <script src="directory.js?v=7" defer></script>
   </head>
@@ -32,7 +32,7 @@
       </a>
 
       <nav class="main-nav" id="main-nav" aria-label="Navegação principal">
-        <a href="#onde-ir">Onde ir</a>
+        <a href="onde-ir.html">Onde ir</a>
         <a href="#passeios">Passeios</a>
         <a href="#conheca-a-regiao">Conheça a região</a>
         <a href="onde-comer.html">Onde comer</a>
@@ -74,7 +74,7 @@
   <div class="guide-shell">
     <h2 id="experiencias-title">Escolha seu jeito de viver Angra</h2>
     <div class="experience-grid">
-      <a class="experience-card" href="#guia-destinos" data-guide-filter="Praias e ilhas">
+      <a class="experience-card" href="onde-ir.html?categoria=Praias%20e%20ilhas#guia-destinos">
         <img src="assets/lagoa-azul.jpg" alt="" loading="lazy">
         <div><strong>Praias e ilhas</strong><span>Da Lagoa Azul às Ilhas Botinas, encontre sua próxima parada para banho.</span></div>
       </a>
@@ -82,7 +82,7 @@
         <img src="assets/ilhas-botinas.jpg" alt="" loading="lazy">
         <div><strong>Passeios de lancha</strong><span>Escolha um roteiro pelas ilhas e enseadas da baía.</span></div>
       </a>
-      <a class="experience-card" href="#guia-destinos" data-guide-filter="Trilhas e natureza">
+      <a class="experience-card" href="onde-ir.html?categoria=Trilhas%20e%20natureza#guia-destinos">
         <img src="assets/pico-do-frade.jpg" alt="" loading="lazy">
         <div><strong>Trilhas e natureza</strong><span>Explore caminhos da Mata Atlântica, cachoeiras e mirantes.</span></div>
       </a>
@@ -102,34 +102,10 @@
 <section class="guide" id="onde-ir" aria-labelledby="guide-title">
   <div class="guide-shell">
     <div class="guide-heading">
-      <div>
-        <h2 id="guide-title">Onde ir em Angra</h2>
-        <p>Encontre seu próximo destino e veja como chegar.</p>
-      </div>
-      <a href="app/index.html">Abrir mapa e roteiro <span aria-hidden="true">↗</span></a>
+      <div><h2 id="guide-title">Onde ir em Angra</h2><p>Explore praias, ilhas, trilhas e espaços culturais da região.</p></div>
+      <a href="onde-ir.html">Abrir guia de destinos →</a>
     </div>
-    <div class="guide-featured" id="guide-featured"></div>
-    <div class="guide-catalog" id="guia-destinos">
-      <h3>Guia de destinos</h3>
-      <div class="guide-controls">
-        <label>Buscar destino
-          <input type="search" id="guide-search" placeholder="Ex. Lagoa Azul" autocomplete="off">
-        </label>
-        <label>Categoria
-          <select id="guide-category">
-            <option value="">Todas as categorias</option>
-            <option>Praias e ilhas</option>
-            <option>Trilhas e natureza</option>
-            <option>História e cultura</option>
-            <option>Vilas e enseadas</option>
-          </select>
-        </label>
-      </div>
-      <p class="guide-count" id="guide-count" role="status"></p>
-      <div class="guide-grid" id="guide-grid"></div>
-      <button class="guide-more" id="guide-more" type="button" hidden>Mostrar mais destinos</button>
-      <noscript><p><a href="app/index.html">Abra o guia de destinos</a> com JavaScript ativado para pesquisar os lugares.</p></noscript>
-    </div>
+    <a href="destino.html?lugar=lagoa-azul">Conheça a Lagoa Azul</a>
   </div>
 </section>
 
@@ -146,7 +122,7 @@
       <h3 id="region-title">Conheça a região</h3>
       <div class="guide-plan-grid directory-grid">
         <a href="centro-historico.html"><strong>Centro Histórico</strong><span>Explore o Convento do Carmo, a Igreja Matriz, as praças e as casas de cultura.</span></a>
-        <a href="#guia-destinos" data-guide-filter="Vilas e enseadas"><strong>Vilas e enseadas</strong><span>Conheça o Abraão e outros pontos da costa da Ilha Grande.</span></a>
+        <a href="onde-ir.html?categoria=Vilas%20e%20enseadas#guia-destinos"><strong>Vilas e enseadas</strong><span>Conheça o Abraão e outros pontos da costa da Ilha Grande.</span></a>
         <a href="#passeios"><strong>Baía de Angra</strong><span>Veja roteiros de barco por Cataguases, Botinas, Gipóia e Lagoa Azul.</span></a>
       </div>
     </section>
@@ -169,11 +145,6 @@
     <a class="directory-route" href="#roteiro">Monte sua cotação de passeio <span aria-hidden="true">→</span></a>
   </div>
 </section>
-
-<dialog class="guide-dialog" id="guide-dialog" aria-labelledby="guide-dialog-title">
-  <form method="dialog"><button type="submit" aria-label="Fechar detalhes">×</button></form>
-  <div id="guide-dialog-content"></div>
-</dialog>
 
       <section class="section section-intro" id="passeios" aria-labelledby="passeios-title">
         <div class="section-heading">
