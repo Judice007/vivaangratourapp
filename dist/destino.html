@@ -15,6 +15,8 @@
   <script src="app/merge-catalog.js?v=1" defer></script>
   <script src="directory-data.js?v=5" defer></script>
   <script src="guide.js?v=9" defer></script>
+  <link rel="stylesheet" href="reviews.css?v=1">
+  <script src="reviews.js?v=1" defer></script>
 </head>
 <body class="guide-subpage">
 <header class="subpage-header">
@@ -33,6 +35,26 @@
   <h1 id="destination-title">Destino em Angra</h1>
 </div></section>
 <article class="subpage-content guide-shell destination-content" id="destination-content" aria-labelledby="destination-title"></article>
+<section class="guide-shell subpage-content reviews-section" id="destination-reviews" aria-labelledby="reviews-title" hidden>
+  <h2 id="reviews-title">Avaliações de quem já foi</h2>
+  <ul class="review-list"></ul>
+  <p role="status" aria-live="polite"></p>
+  <form class="review-form" method="post" hidden>
+    <label>Seu primeiro nome (opcional) <input name="name" maxlength="40" autocomplete="given-name"></label>
+    <label>Nota
+      <select name="rating" required>
+        <option value="">Escolha de 1 a 5 estrelas</option>
+        <option value="5">5 estrelas</option><option value="4">4 estrelas</option>
+        <option value="3">3 estrelas</option><option value="2">2 estrelas</option>
+        <option value="1">1 estrela</option>
+      </select>
+    </label>
+    <label>Como foi sua visita? <textarea name="comment" rows="4" minlength="10" maxlength="600" required></textarea></label>
+    <label><input name="visited" type="checkbox" required> Confirmo que visitei este lugar.</label>
+    <p>O relato e o primeiro nome informado ficam públicos após aprovação.</p>
+    <button class="guide-button" type="submit">Enviar avaliação</button>
+  </form>
+</section>
 </main>
 </body>
 </html>

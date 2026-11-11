@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Moderação de avaliações | Viva Angra Tour</title>
+  <link rel="stylesheet" href="assets/brand-tokens.css">
+  <link rel="stylesheet" href="guide.css?v=11">
+  <link rel="stylesheet" href="brand.css?v=1">
+  <link rel="stylesheet" href="reviews.css?v=1">
+  <script src="reviews-admin.js?v=1" defer></script>
+</head>
+<body class="guide-subpage">
+  <main class="guide-shell subpage-content">
+    <h1>Moderação de avaliações</h1>
+    <form class="review-form" method="post">
+      <label>Chave da equipe <input name="token" type="password" required autocomplete="off"></label>
+      <button class="guide-button" type="submit">Consultar fila</button>
+    </form>
+    <p role="status" aria-live="polite"></p>
+    <ul class="review-list"></ul>
+  </main>
+</body>
+</html>
