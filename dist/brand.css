@@ -48,3 +48,47 @@ h1, h2, h3 { font-family: var(--vat-titulo); font-weight: 750; }
   .guide-shell, .guide-hero-inner { width: calc(100% - 32px); }
   .guide-hero h1 { font-size: clamp(2rem, 6.7vw, 2.75rem); }
 }
+#passeios .route-gallery {
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  background: var(--vat-superficie);
+  border-radius: var(--vat-raio);
+}
+#passeios .route-gallery::before, #passeios .route-gallery::after { content: none; }
+#passeios .route-gallery-track { animation: none; }
+#passeios .route-photo-card {
+  flex-basis: clamp(238px, 29vw, 350px);
+  height: auto;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  border-radius: var(--vat-raio);
+  background: var(--vat-petroleo);
+  scroll-snap-align: start;
+}
+#passeios .route-photo-card img, #passeios .tour-card > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  transform: none;
+}
+#passeios img.route-photo-portrait {
+  object-fit: contain;
+  background: var(--vat-petroleo-escuro);
+}
+#passeios .route-photo-card figcaption {
+  position: static;
+  background: none;
+  padding: 10px 14px 12px;
+}
+#passeios .tour-card {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+  border-radius: var(--vat-raio);
+}
+#passeios .tour-card-body { padding: clamp(14px, 2vw, 22px); }
+.route-photo-credits { margin-top: 16px; font-size: .86rem; }
+.route-photo-credits summary { cursor: pointer; width: fit-content; }
+.route-photo-credits p { margin: 4px 0; }
