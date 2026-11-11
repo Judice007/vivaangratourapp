@@ -301,3 +301,7 @@ summary.listing-preview:focus-visible { outline: 3px solid #087b85; outline-offs
 }
 .listing-hide, .listing-disclosure[open] .listing-show { display: none; }
 .listing-disclosure[open] .listing-hide { display: inline; }
+.guide-place-gallery { margin: 16px 0; }
+.guide-place-gallery summary { cursor: pointer; font-weight: 700; }
+.guide-place-gallery > div { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-block: 10px; }
+.guide-place-gallery img { display: block; aspect-ratio: 4 / 3; }

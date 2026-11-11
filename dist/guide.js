@@ -94,6 +94,24 @@ function openGuidePlace(place, title) {
   if (place.access) {
     guideDialogContent.append(guideElement("h3", "Como chegar"), guideElement("p", place.access));
   }
+  if (place.visitNotes) {
+    guideDialogContent.append(guideElement("h3", "Relatos de visitantes"), guideElement("p", place.visitNotes));
+  }
+  if (place.gallery?.length) {
+    const gallery = guideElement("details", "", "guide-place-gallery");
+    const photos = guideElement("div");
+    for (const filename of place.gallery) {
+      const image = placeImage("assets/" + filename);
+      image.alt = "Vista da " + place.name;
+      photos.append(image);
+    }
+    gallery.append(
+      guideElement("summary", "Galeria da " + place.name + " (" + place.gallery.length + " fotos)"),
+      photos,
+      guideElement("small", "Fotos do acervo Experiências Viva Angra.")
+    );
+    guideDialogContent.append(gallery);
+  }
   const links = guideElement("nav");
   links.setAttribute("aria-label", "Links do destino");
   if (Number.isFinite(place.lat) && Number.isFinite(place.lng)) {
