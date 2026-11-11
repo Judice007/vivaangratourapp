@@ -93,6 +93,7 @@ function renderDestination(place) {
     destinationContent.append(image);
     if (credit) destinationContent.append(credit);
   }
+  if (place.location) destinationContent.append(guideElement("p", place.location, "destination-location"));
   if (place.description) destinationContent.append(guideElement("p", place.description));
   if (place.access) {
     destinationContent.append(guideElement("h3", "Como chegar"), guideElement("p", place.access));
@@ -109,7 +110,7 @@ function renderDestination(place) {
       photos.append(image);
     }
     gallery.append(
-      guideElement("h2", "Galeria da " + place.name + " (" + place.gallery.length + " fotos)"),
+      guideElement("h2", "Galeria de fotos (" + place.gallery.length + ")"),
       photos,
       guideElement("small", "Fotos do acervo Experiências Viva Angra.")
     );
@@ -128,7 +129,7 @@ function renderDestination(place) {
 function placeLink(place, title, featured) {
   const link = guideElement("a", "", featured ? "guide-feature" : "guide-place");
   link.href = "destino.html?lugar=" + destinationSlug(place.name);
-  if (featured) link.append(placeImage("assets/" + localPhotos.get(place.name)));
+  if (featured) link.append(placeImage("assets/" + (place.gallery?.[0] ?? localPhotos.get(place.name))));
   link.append(guideElement("span", placeCategory(place.name)), guideElement("strong", title));
   return link;
 }
@@ -149,10 +150,10 @@ if (guideGrid) {
     if (place) guideFeatured.append(placeLink(place, title, true));
   }
 
-  const guideEntries = guidePlaces.map((place) => ({
+  const guideEntries = [...guidePlaces].sort((first, second) => Number(Boolean(second.gallery)) - Number(Boolean(first.gallery))).map((place) => ({
     place,
     category: placeCategory(place.name),
-    search: normalizeGuideText([place.name, place.description, place.access].join(" ")),
+    search: normalizeGuideText([place.name, place.location, place.description, place.access].join(" ")),
   }));
 
   function renderGuide({ append = false } = {}) {
