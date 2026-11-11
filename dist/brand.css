@@ -74,8 +74,6 @@ h1, h2, h3 { font-family: var(--vat-titulo); font-weight: 750; }
   object-fit: cover;
   transform: none;
 }
-#passeios img.route-photo-itanhanga { object-position: center 60%; }
-#passeios img.route-photo-abraao { object-position: center 66%; }
 #passeios .route-photo-card figcaption {
   position: static;
   background: none;
