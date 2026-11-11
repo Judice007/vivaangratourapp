@@ -1,0 +1,50 @@
+body {
+  color: var(--vat-texto);
+  background: var(--vat-superficie);
+  font-family: var(--vat-corpo);
+}
+h1, h2, h3 { font-family: var(--vat-titulo); font-weight: 750; }
+.site-header, .subpage-header, .site-footer { background: var(--vat-petroleo-escuro); }
+.site-header .brand-logo-wrap, .subpage-brand img { background: transparent; }
+.guide, .guide-plan, .guide-subpage, .subpage-intro { background: var(--vat-superficie); }
+.guide-plan, .subpage-intro { border-block: 1px solid #063d5126; }
+.guide-shell, .guide-hero-inner { width: min(var(--vat-conteudo), calc(100% - 48px)); }
+.guide-hero h1 {
+  font: 750 clamp(3.25rem, 6vw, 4.5rem)/1.12 var(--vat-titulo);
+  letter-spacing: -.035em;
+  max-width: none;
+}
+.hero-title-line {
+  display: inline-block;
+  background: var(--vat-petroleo);
+  color: var(--vat-branco);
+  padding: .05em .18em .1em;
+}
+.hero-title-line + br + .hero-title-line { margin-top: .09em; }
+.guide-hero h1 em { color: var(--vat-turquesa); }
+.guide h2, .guide-plan h2, .guide-experiences h2, .subpage-content h2 {
+  font-size: clamp(1.875rem, 4vw, 2.875rem);
+  letter-spacing: -.04em;
+}
+.subpage-intro h1 { font-size: clamp(2rem, 5vw, 4.5rem); }
+.site-header .header-action, .button-primary, .guide-button {
+  background: var(--vat-turquesa);
+  color: var(--vat-petroleo);
+  border-radius: var(--vat-capsula);
+  min-height: 44px;
+}
+.guide-button-outline { background: var(--vat-petroleo); color: var(--vat-branco); }
+.guide-feature, .experience-card, .guide-place, .directory-grid article {
+  border-radius: var(--vat-raio);
+}
+.guide-controls input, .guide-controls select, .quote-form { background: var(--vat-branco); }
+:is(a, button, input, select, textarea, summary):focus-visible {
+  outline: 3px solid var(--vat-petroleo);
+  outline-offset: 3px;
+}
+:is(.site-header, .subpage-header, .guide-hero) :focus-visible { outline-color: var(--vat-turquesa); }
+
+@media (max-width: 640px) {
+  .guide-shell, .guide-hero-inner { width: calc(100% - 32px); }
+  .guide-hero h1 { font-size: clamp(2rem, 6.7vw, 2.75rem); }
+}

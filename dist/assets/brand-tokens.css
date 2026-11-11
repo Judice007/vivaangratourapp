@@ -1,0 +1,14 @@
+:root {
+  --vat-petroleo: #063D51;
+  --vat-petroleo-escuro: #063347;
+  --vat-turquesa: #28EFEC;
+  --vat-azul-logo: #00A9D6;
+  --vat-branco: #FFFFFF;
+  --vat-superficie: #F6FBFF;
+  --vat-texto: #063347;
+  --vat-titulo: Bahnschrift, Inter, "Segoe UI", system-ui, sans-serif;
+  --vat-corpo: Inter, "Segoe UI", system-ui, sans-serif;
+  --vat-capsula: 999px;
+  --vat-raio: 16px;
+  --vat-conteudo: 1160px;
+}

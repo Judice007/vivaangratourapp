@@ -13,16 +13,18 @@
 <meta name="twitter:title" content="Viva Angra Tour — descubra Angra dos Reis e Ilha Grande">
 <meta name="twitter:description" content="Deslize por praias e ilhas reais de Angra dos Reis, salve seus favoritos e monte seu roteiro de viagem.">
 <meta name="twitter:image" content="https://upload.wikimedia.org/wikipedia/commons/6/69/Canto_da_Praia_de_Lopes_Mendes_em_Ilha_Grande%2C_RJ.jpg">
-<meta name="theme-color" content="#197b70">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A6%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#063347">
+<link rel="icon" href="../assets/viva-angra-tour-logo.png" type="image/png">
 <link rel="stylesheet" href="app.css">
 <link rel="stylesheet" href="map-layout.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="cards-widget/widget.css">
+<link rel="stylesheet" href="../assets/brand-tokens.css">
+<link rel="stylesheet" href="brand.css?v=1">
 <script src="data.js?v=2" defer></script><script src="app.js?v=2" defer></script><script src="cards-widget/widget.js" defer></script>
 </head>
 <body>
-<header><a href="../index.html" style="color:inherit;font-size:13px">← Agência</a><strong>✦ Viva Angra Tour</strong><button id="edit-trip">Editar viagem</button></header>
+<header><a href="../index.html" style="color:inherit;font-size:13px">← Agência</a><a class="app-brand" href="../index.html"><img src="../assets/viva-angra-tour-logo.png" alt="Viva Angra Tour" width="506" height="424"></a><button id="edit-trip">Editar viagem</button></header>
 <main><div class="intro"><span class="eyebrow">ILHAS, PRAIAS E NOVAS DESCOBERTAS</span><h1>Sua viagem começa<br>com um lugar.</h1><p>Explore Angra no mapa. Salve os lugares que combinam com você e monte seus dias.</p></div><p id="trip-summary"></p>
 <div class="layout"><section class="discover"><section class="map-panel"><h2>Explore Angra dos Reis</h2><div class="map-stage"><div id="map" aria-label="Mapa de Angra dos Reis"></div><div id="card-root" role="group" aria-label="Destino em descoberta"></div>
 <div class="map-float-tools"><button id="map-overview" aria-label="Ver toda a região" title="Ver toda a região">⤢</button><button id="map-expand" aria-expanded="false" aria-label="Ampliar mapa" title="Ampliar mapa">⛶</button></div></div>

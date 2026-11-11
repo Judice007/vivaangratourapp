@@ -1,0 +1,23 @@
+body { color: var(--vat-texto); background: var(--vat-superficie); font-family: var(--vat-corpo); }
+header, main { max-width: calc(var(--vat-conteudo) + 48px); }
+header { border-color: #063d5126; }
+.app-brand img { width: 64px; height: 54px; object-fit: contain; display: block; }
+h1, h2, h3 { font-family: var(--vat-titulo); font-weight: 750; }
+.intro h1 { font-size: clamp(2rem, 5vw, 4.5rem); }
+.eyebrow, .intro p, a, #map-link { color: var(--vat-petroleo); }
+#trip-summary, .tone-favorites, .tone-route, .tone-partners { background: var(--vat-branco); }
+aside > section, aside > details, .map-panel { border-radius: var(--vat-raio); border-color: #063d5126; }
+#like, #edit-trip, #request {
+  background: var(--vat-turquesa);
+  color: var(--vat-petroleo);
+  border-color: transparent;
+  border-radius: var(--vat-capsula);
+}
+#map-expand[aria-expanded="true"] { background: var(--vat-petroleo); color: var(--vat-branco); }
+#notice { background: var(--vat-petroleo-escuro); }
+progress { accent-color: var(--vat-petroleo); }
+:is(button, a, input, select, summary):focus-visible { outline: 3px solid var(--vat-petroleo); outline-offset: 3px; }
+@media (max-width: 640px) { .intro h1 { font-size: clamp(2rem, 6.7vw, 2.75rem); } }
+#like:hover, #edit-trip:hover, #request:hover { background: #a4fffc; }
+#like { box-shadow: 0 6px 16px #063d5126; }
+:is(.tone-favorites, .tone-route, .tone-partners) h2::before { background: var(--vat-azul-logo); }
