@@ -7,6 +7,16 @@ const guideMore = document.querySelector("#guide-more");
 const destinationContent = document.querySelector("#destination-content");
 const guideParams = new URLSearchParams(window.location.search);
 const guideBatch = 12;
+const guideSections = new Map([
+  ["regiao", {
+    label: "Conheça a região", url: "conheca-a-regiao.html",
+    types: ["Atrativo Turístico", "Local", "Marina", "Igreja", "Museu", "Mirante", "Centro Cultural", "Teatro", "Parque", "Trilha", "Vilas e enseadas", "História e cultura", "Trilhas e natureza"],
+  }],
+  ["comer", {label: "Onde comer", url: "onde-comer.html", types: ["Restaurante", "Bar", "Café"]}],
+  ["ficar", {label: "Onde ficar", url: "onde-ficar.html", types: ["Hotel", "Pousada"]}],
+]);
+const currentSection = document.body.dataset.guideSection;
+const curatedFoodIds = [326, 300, 299];
 let guideLimit = guideBatch;
 
 const localPhotos = new Map([
@@ -86,7 +96,15 @@ function guidePlaceId(place) {
 function renderDestination(place) {
   document.querySelector("#destination-title").textContent = place.name;
   document.title = place.name + " | Viva Angra Tour";
-  const localPhoto = place.gallery?.[0] ?? localPhotos.get(place.name);
+  const returnSection = guideSections.get(guideParams.get("guia"));
+  const back = document.querySelector("#destination-back");
+  if (back && returnSection) {
+    back.href = returnSection.url;
+    back.textContent = "← " + returnSection.label;
+  }
+  const foodIndex = curatedFoodIds.findIndex((id) => place.portalIds?.includes(id));
+  const listing = window.VivaAngraDirectory?.alimentacao[foodIndex];
+  const localPhoto = listing?.image?.replace(/^assets\//, "") ?? place.gallery?.[0] ?? localPhotos.get(place.name);
   const photoUrl = localPhoto ? galleryImageUrl(localPhoto) : place.photoUrl;
   if (photoUrl) {
     const image = placeImage(photoUrl);
@@ -103,7 +121,18 @@ function renderDestination(place) {
   }
   if (place.portalCategories?.length) destinationContent.append(guideElement("p", place.portalCategories.join(" · ")));
   if (place.location) destinationContent.append(guideElement("p", place.location, "destination-location"));
-  if (place.description) destinationContent.append(guideElement("p", place.description));
+  const description = listing?.description ?? place.description;
+  if (description) destinationContent.append(guideElement("p", description));
+  if (listing) {
+    const details = guideElement("dl", "", "listing-details");
+    for (const [label, value] of [["Endereço", listing.address], ["Telefone", listing.phone], ["Horários informados", listing.hours]]) {
+      if (value) details.append(guideElement("dt", label), guideElement("dd", value));
+    }
+    destinationContent.append(details);
+    if (listing.instagram) {
+      destinationContent.append(guideLink("Instagram · @" + listing.instagram, "https://www.instagram.com/" + listing.instagram + "/"));
+    }
+  }
   if (place.access) {
     destinationContent.append(guideElement("h2", "Como chegar"), guideElement("p", place.access));
   }
@@ -142,6 +171,7 @@ function renderDestination(place) {
 function placeLink(place, title, featured) {
   const link = guideElement("a", "", featured ? "guide-feature" : "guide-place");
   link.href = "destino.html?lugar=" + guidePlaceId(place);
+  if (currentSection) link.href += "&guia=" + currentSection;
   if (featured) link.append(placeImage(galleryImageUrl(place.gallery?.[0] ?? localPhotos.get(place.name))));
   link.append(guideElement("span", (place.portalCategories?.[0] ?? placeCategory(place.name))), guideElement("strong", title));
   if (!featured && place.location) link.append(guideElement("span", place.location));
@@ -161,17 +191,10 @@ if (guideGrid) {
   const guideFeatured = document.querySelector("#guide-featured");
   for (const [name, title] of guideHighlights) {
     const place = guidePlaces.find((entry) => entry.name === name);
-    if (place) guideFeatured.append(placeLink(place, title, true));
+    if (place && guideFeatured) guideFeatured.append(placeLink(place, title, true));
   }
 
-  const portalCategories = new Set(guidePlaces.flatMap((place) => place.portalCategories ?? []));
-  for (const category of [...portalCategories].sort((a, b) => a.localeCompare(b, "pt-BR"))) {
-    const option = guideElement("option", category);
-    option.value = category;
-    guideCategory.append(option);
-  }
-
-  const guideEntries = [...guidePlaces].sort((first, second) => Number(Boolean(second.gallery)) - Number(Boolean(first.gallery))).map((place) => ({
+  const guideEntries = guidePlaces.map((place) => ({
     place,
     categories: [
       ...(place.portalCategories ?? []),
@@ -183,11 +206,32 @@ if (guideGrid) {
     ],
     search: normalizeGuideText([place.name, place.location, place.description, place.access, ...(place.portalCategories ?? [])].join(" ")),
   }));
+  const section = guideSections.get(currentSection);
+  const entries = guideEntries.filter(({ categories }) => {
+    if (!section) return true;
+    if (currentSection === "regiao" && categories.some((category) =>
+      guideSections.get("comer").types.includes(category) || guideSections.get("ficar").types.includes(category)
+    )) return false;
+    return categories.some((category) => section.types.includes(category));
+  });
+  const categoryOptions = section
+    ? new Set(entries.flatMap(({ categories }) => categories.filter((category) => section.types.includes(category))))
+    : new Set(guidePlaces.flatMap((place) => place.portalCategories ?? []));
+  for (const category of [...categoryOptions].sort((a, b) => a.localeCompare(b, "pt-BR"))) {
+    const option = guideElement("option", category);
+    option.value = category;
+    guideCategory.append(option);
+  }
+  entries.sort((first, second) => {
+    const priority = ({ place }) => Number(Boolean(place.gallery)) +
+      (currentSection === "comer" && curatedFoodIds.some((id) => place.portalIds?.includes(id)) ? 2 : 0);
+    return priority(second) - priority(first);
+  });
 
   function renderGuide({ append = false } = {}) {
     const query = normalizeGuideText(guideSearch.value.trim());
     const selectedCategory = guideCategory.value;
-    const matches = guideEntries.filter(({ search, categories }) =>
+    const matches = entries.filter(({ search, categories }) =>
       search.includes(query) && (!selectedCategory || categories.includes(selectedCategory))
     );
     const start = append ? guideGrid.childElementCount : 0;
