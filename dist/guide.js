@@ -75,11 +75,19 @@ function destinationSlug(name) {
   return normalizeGuideText(name).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
+function galleryImageUrl(filename) {
+  return filename.startsWith("https://") ? filename : "assets/" + filename;
+}
+
+function guidePlaceId(place) {
+  return place.id ?? destinationSlug(place.name);
+}
+
 function renderDestination(place) {
   document.querySelector("#destination-title").textContent = place.name;
   document.title = place.name + " | Viva Angra Tour";
   const localPhoto = place.gallery?.[0] ?? localPhotos.get(place.name);
-  const photoUrl = localPhoto ? "assets/" + localPhoto : place.photoUrl;
+  const photoUrl = localPhoto ? galleryImageUrl(localPhoto) : place.photoUrl;
   if (photoUrl) {
     const image = placeImage(photoUrl);
     image.addEventListener("error", () => {
@@ -93,10 +101,11 @@ function renderDestination(place) {
     destinationContent.append(image);
     if (credit) destinationContent.append(credit);
   }
+  if (place.portalCategories?.length) destinationContent.append(guideElement("p", place.portalCategories.join(" · ")));
   if (place.location) destinationContent.append(guideElement("p", place.location, "destination-location"));
   if (place.description) destinationContent.append(guideElement("p", place.description));
   if (place.access) {
-    destinationContent.append(guideElement("h3", "Como chegar"), guideElement("p", place.access));
+    destinationContent.append(guideElement("h2", "Como chegar"), guideElement("p", place.access));
   }
   if (place.visitNotes) {
     destinationContent.append(guideElement("h3", "Relatos de visitantes"), guideElement("p", place.visitNotes));
@@ -105,8 +114,9 @@ function renderDestination(place) {
     const gallery = guideElement("section", "", "guide-place-gallery");
     const photos = guideElement("div");
     for (const filename of place.gallery) {
-      const image = placeImage("assets/" + filename);
-      image.alt = "Vista da " + place.name;
+      const image = placeImage(galleryImageUrl(filename));
+      image.alt = "Foto de " + place.name;
+      image.addEventListener("error", () => image.remove(), { once: true });
       photos.append(image);
     }
     gallery.append(
@@ -122,20 +132,24 @@ function renderDestination(place) {
     const coordinates = encodeURIComponent(place.lat + "," + place.lng);
     links.append(guideLink("Ver localização no Google Maps", "https://www.google.com/maps/search/?api=1&query=" + coordinates));
   }
-  links.append(guideLink("Abrir mapa e roteiro da Viva Angra Tour", "app/index.html"));
+  else if (place.location) {
+    links.append(guideLink("Buscar endereço no Google Maps", "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(place.location)));
+  }
+  links.append(guideLink("Abrir mapa e roteiro da Viva Angra Tour", "app/index.html?lugar=" + encodeURIComponent(guidePlaceId(place))));
   destinationContent.append(links);
 }
 
 function placeLink(place, title, featured) {
   const link = guideElement("a", "", featured ? "guide-feature" : "guide-place");
-  link.href = "destino.html?lugar=" + destinationSlug(place.name);
-  if (featured) link.append(placeImage("assets/" + (place.gallery?.[0] ?? localPhotos.get(place.name))));
-  link.append(guideElement("span", placeCategory(place.name)), guideElement("strong", title));
+  link.href = "destino.html?lugar=" + guidePlaceId(place);
+  if (featured) link.append(placeImage(galleryImageUrl(place.gallery?.[0] ?? localPhotos.get(place.name))));
+  link.append(guideElement("span", (place.portalCategories?.[0] ?? placeCategory(place.name))), guideElement("strong", title));
+  if (!featured && place.location) link.append(guideElement("span", place.location));
   return link;
 }
 
 if (destinationContent) {
-  const place = guidePlaces.find((entry) => destinationSlug(entry.name) === guideParams.get("lugar"));
+  const place = guidePlaces.find((entry) => guidePlaceId(entry) === guideParams.get("lugar"));
   if (place) renderDestination(place);
   else {
     document.querySelector("#destination-title").textContent = "Destino não encontrado";
@@ -150,17 +164,31 @@ if (guideGrid) {
     if (place) guideFeatured.append(placeLink(place, title, true));
   }
 
+  const portalCategories = new Set(guidePlaces.flatMap((place) => place.portalCategories ?? []));
+  for (const category of [...portalCategories].sort((a, b) => a.localeCompare(b, "pt-BR"))) {
+    const option = guideElement("option", category);
+    option.value = category;
+    guideCategory.append(option);
+  }
+
   const guideEntries = [...guidePlaces].sort((first, second) => Number(Boolean(second.gallery)) - Number(Boolean(first.gallery))).map((place) => ({
     place,
-    category: placeCategory(place.name),
-    search: normalizeGuideText([place.name, place.location, place.description, place.access].join(" ")),
+    categories: [
+      ...(place.portalCategories ?? []),
+      ...(place.portalCategories ? (
+        place.portalCategories.includes("Praia") ? ["Praias e ilhas"] :
+        place.portalCategories.some((type) => ["Trilha", "Mirante", "Parque"].includes(type)) ? ["Trilhas e natureza"] :
+        place.portalCategories.some((type) => ["Igreja", "Museu", "Teatro", "Centro Cultural"].includes(type)) ? ["História e cultura"] : []
+      ) : [placeCategory(place.name)]),
+    ],
+    search: normalizeGuideText([place.name, place.location, place.description, place.access, ...(place.portalCategories ?? [])].join(" ")),
   }));
 
   function renderGuide({ append = false } = {}) {
     const query = normalizeGuideText(guideSearch.value.trim());
     const selectedCategory = guideCategory.value;
-    const matches = guideEntries.filter(({ search, category }) =>
-      search.includes(query) && (!selectedCategory || category === selectedCategory)
+    const matches = guideEntries.filter(({ search, categories }) =>
+      search.includes(query) && (!selectedCategory || categories.includes(selectedCategory))
     );
     const start = append ? guideGrid.childElementCount : 0;
     if (!append) guideGrid.replaceChildren();

@@ -2,12 +2,12 @@
 'use strict';
 const $ = id => document.getElementById(id);
 const slug = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-const curatedByName = new Map((AngraData.curated||[]).map(c=>[c.name,c]));
-const orderedNames = [...curatedByName.keys(), ...AngraData.names.filter(n=>!curatedByName.has(n))];
-const places = orderedNames.map(name => {
- const c = curatedByName.get(name);
- return c ? {id:slug(name),name,lat:c.lat,lng:c.lng,description:c.description,photoUrl:c.photoUrl,photoCredit:c.photoCredit,access:c.access,verified:true} : {id:slug(name),name};
-});
+const curated = AngraData.curated ?? [];
+const curatedNames = new Set(curated.map(place => place.name));
+const places = [
+ ...curated.map(place => ({...place, id:place.id ?? slug(place.name), verified:Number.isFinite(place.lat)})),
+ ...AngraData.names.filter(name => !curatedNames.has(name)).map(name => ({id:slug(name), name})),
+];
 const byId = new Map(places.map(p=>[p.id,p]));
 const approximateCoordinates = {'praia-do-aventureiro':[-23.188,-44.315],'ilha-da-gipoia':[-23.047,-44.290],'vila-do-abraao':[-23.143,-44.166],'lagoa-azul':[-23.105,-44.255],'praia-de-lopes-mendes':[-23.174,-44.143],'pico-do-papagaio':[-23.155,-44.185]};
 const read = key => {try{return JSON.parse(localStorage.getItem(key))}catch{return null}};
@@ -15,7 +15,8 @@ const defaults = {days:3,stay:'Ainda não sei',hotel:'Ainda estou procurando',bo
 const stored=read('angra-state-v2');
 const profile={...defaults,...(stored?.profile||read('angra-briefing')||{})};
 profile.days=Math.max(1,Math.min(30,parseInt(profile.days)||3));
-let state={version:2,profile,current:byId.has(stored?.current)?stored.current:places[0].id,
+const linkedPlace = new URLSearchParams(location.search).get('lugar');
+let state={version:2,profile,current:byId.has(linkedPlace)?linkedPlace:byId.has(stored?.current)?stored.current:places[0].id,
  favorites:Array.isArray(stored?.favorites)?[...new Set(stored.favorites.filter(id=>byId.has(id)))]:[],
  route:[]};
 const validItem = item => item && (byId.has(item.placeId)||typeof item.note==='string');
@@ -186,7 +187,7 @@ script.onload=()=>{
  L.control.layers({'Satélite':satellite,'Mapa':streets},null,{collapsed:false}).addTo(map);
  let failed=false;satellite.on('tileerror',()=>{if(failed)return;failed=true;if(map.hasLayer(satellite)){map.removeLayer(satellite);streets.addTo(map);notice('Satélite indisponível. Exibindo mapa convencional.')}});
  $('map-overview').onclick=()=>map.fitBounds([[-23.25,-44.60],[-22.88,-44.08]]);
- renderCard();map.fitBounds([[-23.25,-44.60],[-22.88,-44.08]]);setTimeout(()=>map.invalidateSize(),0);
+ renderCard();if(!byId.has(linkedPlace))map.fitBounds([[-23.25,-44.60],[-22.88,-44.08]]);setTimeout(()=>map.invalidateSize(),0);
 };
 script.onerror=()=>{$('map').textContent='Mapa indisponível. Use o link de localização abaixo.'};document.head.append(script);
 })();
