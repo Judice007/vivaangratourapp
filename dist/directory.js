@@ -65,7 +65,13 @@ for (const list of document.querySelectorAll("[data-directory]")) {
     if (entry.location) preview.append(guideElement("span", entry.location));
     if (hasDetails) {
       const disclosure = guideElement("details", "", "listing-disclosure");
-      preview.append(guideElement("span", "", "listing-chevron"));
+      const action = guideElement("span", "", "listing-action");
+      action.append(
+        guideElement("span", "Ver detalhes", "listing-show"),
+        guideElement("span", "Recolher detalhes", "listing-hide"),
+        guideElement("span", "", "listing-chevron")
+      );
+      preview.append(action);
       disclosure.append(preview, directoryListingDetails(entry));
       card.append(disclosure);
     } else {

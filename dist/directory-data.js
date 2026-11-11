@@ -1,6 +1,12 @@
 window.VivaAngraDirectory = {
   alimentacao: [
-    {name: "Restaurante Brasileirinho Angra", location: "Angra dos Reis"},
+    {
+      name: "Restaurante Brasileirinho Angra",
+      location: "Centro · Angra dos Reis",
+      address: "Rua Arcebispo Santos, 80 · Centro",
+      phone: "(24) 99295-4975",
+      hours: "Seg–sáb 9h–1h · Dom 16h–1h",
+    },
     {
       name: "Bar do Chuveiro",
       location: "Unidade Aquidabã · Angra dos Reis",

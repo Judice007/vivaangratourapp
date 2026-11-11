@@ -272,15 +272,11 @@ html, body { overflow-x: clip; }
 }
 summary.listing-preview { position: relative; cursor: pointer; list-style: none; }
 summary.listing-preview::-webkit-details-marker { display: none; }
-summary.listing-preview strong { padding-right: 22px; }
 summary.listing-preview:hover strong { text-decoration: underline; text-underline-offset: 4px; }
 summary.listing-preview:focus-visible { outline: 3px solid #087b85; outline-offset: -4px; }
 .listing-preview img { margin-bottom: 5px; }
 [data-directory] { align-items: start; }
 .listing-chevron {
-  position: absolute;
-  bottom: 18px;
-  right: 16px;
   width: 8px;
   height: 8px;
   border: solid currentColor;
@@ -291,3 +287,18 @@ summary.listing-preview:focus-visible { outline: 3px solid #087b85; outline-offs
 .listing-content { margin: 0 14px; padding: 12px 0 14px; border-top: 1px solid #063d5126; }
 .listing-content > p { margin: 0 0 8px; }
 .listing-content .listing-instagram { display: inline-block; margin-top: 6px; }
+
+.listing-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  margin-top: 5px;
+  border-radius: 5px;
+  background: #e7f9f8;
+  color: #063d51;
+  font-weight: 700;
+}
+.listing-hide, .listing-disclosure[open] .listing-show { display: none; }
+.listing-disclosure[open] .listing-hide { display: inline; }
