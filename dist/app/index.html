@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="pt-BR">
-<head><base href="/app/"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Viva Angra Tour</title>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Viva Angra Tour</title>
 <meta name="description" content="Descubra praias e ilhas de Angra dos Reis e Ilha Grande deslizando por destinos reais, salve seus favoritos e monte seu roteiro de viagem.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Viva Angra Tour">
@@ -19,10 +19,10 @@
 <link rel="stylesheet" href="map-layout.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="cards-widget/widget.css">
-<script src="data.js" defer></script><script src="app.js" defer></script><script src="cards-widget/widget.js" defer></script>
+<script src="data.js?v=2" defer></script><script src="app.js?v=2" defer></script><script src="cards-widget/widget.js" defer></script>
 </head>
 <body>
-<header><a href="/" style="color:inherit;font-size:13px">← Agência</a><strong>✦ Viva Angra Tour</strong><button id="edit-trip">Editar viagem</button></header>
+<header><a href="../index.html" style="color:inherit;font-size:13px">← Agência</a><strong>✦ Viva Angra Tour</strong><button id="edit-trip">Editar viagem</button></header>
 <main><div class="intro"><span class="eyebrow">ILHAS, PRAIAS E NOVAS DESCOBERTAS</span><h1>Sua viagem começa<br>com um lugar.</h1><p>Explore Angra no mapa. Salve os lugares que combinam com você e monte seus dias.</p></div><p id="trip-summary"></p>
 <div class="layout"><section class="discover"><section class="map-panel"><h2>Explore Angra dos Reis</h2><div class="map-stage"><div id="map" aria-label="Mapa de Angra dos Reis"></div><div id="card-root" role="group" aria-label="Destino em descoberta"></div>
 <div class="map-float-tools"><button id="map-overview" aria-label="Ver toda a região" title="Ver toda a região">⤢</button><button id="map-expand" aria-expanded="false" aria-label="Ampliar mapa" title="Ampliar mapa">⛶</button></div></div>

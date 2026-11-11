@@ -3,15 +3,20 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Viva Angra Tour | Passeios em Angra dos Reis</title>
+    <title>Viva Angra Tour | Onde ir e passeios em Angra dos Reis</title>
     <meta
       name="description"
-      content="Passeios de lancha, ilhas e praias em Angra dos Reis com a Viva Angra Tour. Monte seu roteiro e fale direto pelo WhatsApp."
+      content="Guia de praias, ilhas, trilhas e atrações de Angra dos Reis e Ilha Grande. Explore os destinos e encontre seu passeio de lancha."
     />
     <meta name="theme-color" content="#021f4f" />
     <link rel="icon" href="assets/viva-angra-tour-logo.png" type="image/png" />
-    <link rel="preload" as="image" href="assets/cataguases-hero-web.jpg" fetchpriority="high" />
+    <link rel="preload" as="image" href="assets/angra-panorama.jpg" fetchpriority="high" />
     <link rel="stylesheet" href="styles.min.css?v=1" />
+    <link rel="stylesheet" href="guide.css?v=7" />
+    <script src="app/data.js?v=2" defer></script>
+    <script src="guide.js?v=4" defer></script>
+    <script src="directory-data.js?v=4" defer></script>
+    <script src="directory.js?v=6" defer></script>
   </head>
   <body>
     <header class="site-header" aria-label="Topo">
@@ -20,18 +25,17 @@
           <img src="assets/viva-angra-tour-logo.png?v=2" alt="Viva Angra Tour" width="506" height="424" />
         </span>
         <span>
-          <strong>Passeios em Angra</strong>
-          <small>Lancha e Ilha Grande</small>
+          <strong>Viva Angra Tour</strong>
         </span>
       </a>
 
       <nav class="main-nav" id="main-nav" aria-label="Navegação principal">
+        <a href="#onde-ir">Onde ir</a>
         <a href="#passeios">Passeios</a>
-        <a href="#como-funciona">Como funciona</a>
-        <a href="#roteiro">Roteiro</a>
-        <a href="#duvidas">Dúvidas</a>
-        <a href="#contato">Contato</a>
-        <a href="/app/">Explore Angra</a>
+        <a href="#conheca-a-regiao">Conheça a região</a>
+        <a href="onde-comer.html">Onde comer</a>
+        <a href="onde-ficar.html">Onde ficar</a>
+        <a href="app/index.html">Mapa e roteiro</a>
       </nav>
 
       <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="main-nav">
@@ -41,158 +45,133 @@
       </button>
 
       <a class="header-action" data-whatsapp-link href="#" target="_blank" rel="noreferrer">
-        Cotar
+        Pedir cotação
       </a>
     </header>
 
-    <div class="scroll-ocean" data-scroll-ocean aria-hidden="true">
-      <span class="scroll-boat">
-        <svg class="boat-graphic" viewBox="0 0 260 118">
-          <defs>
-            <linearGradient id="boatHullGradient" x1="22" x2="232" y1="64" y2="92" gradientUnits="userSpaceOnUse">
-              <stop offset="0" stop-color="#021f4f" />
-              <stop offset="0.52" stop-color="#073b7b" />
-              <stop offset="1" stop-color="#00a9d6" />
-            </linearGradient>
-            <linearGradient id="boatCabinGradient" x1="96" x2="166" y1="18" y2="56" gradientUnits="userSpaceOnUse">
-              <stop offset="0" stop-color="#ffffff" />
-              <stop offset="1" stop-color="#dff7ff" />
-            </linearGradient>
-          </defs>
-          <path class="boat-shadow" d="M34 92 C82 112 180 113 230 90 C185 103 86 104 34 92Z" />
-          <path class="boat-hull" d="M24 66 H246 C235 88 211 99 164 102 H92 C56 100 34 88 24 66Z" />
-          <path class="boat-hull-light" d="M45 72 H222 C210 82 194 87 166 89 H91 C71 88 56 83 45 72Z" />
-          <path class="boat-deck" d="M40 58 H220 C231 58 239 62 244 68 H21 C25 62 31 58 40 58Z" />
-          <path class="boat-cabin" d="M88 25 H155 C175 25 191 39 196 58 H63 C69 39 76 25 88 25Z" />
-          <path class="boat-window" d="M95 33 H121 V50 H83 C86 40 89 35 95 33Z" />
-          <path class="boat-window" d="M128 33 H153 C163 36 171 42 176 50 H128 Z" />
-          <path class="boat-rail" d="M43 60 C79 49 178 48 218 60" />
-          <path class="boat-bow" d="M210 65 L254 48 L236 69" />
-          <path class="boat-stripe" d="M63 84 H190" />
-          <path class="boat-spray" d="M20 78 C-7 75 -30 66 -52 58" />
-          <path class="boat-spray boat-spray-soft" d="M12 91 C-22 98 -58 98 -92 88" />
-        </svg>
-      </span>
-    </div>
-
     <main id="inicio">
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-media" role="img" aria-label="Vista aérea das ilhas e águas claras de Angra dos Reis"></div>
-        <div class="hero-overlay"></div>
-        <span class="hero-watermark hero-watermark-viva" aria-hidden="true">VIVA</span>
-        <span class="hero-watermark hero-watermark-angra" aria-hidden="true">Angra</span>
+<section class="guide-hero" aria-labelledby="hero-title">
+  <img class="guide-hero-photo" src="assets/angra-panorama.jpg" alt="" fetchpriority="high">
+  <div class="guide-hero-inner">
+    <p>Angra dos Reis e Ilha Grande</p>
+    <h1 id="hero-title">Angra começa<br>onde o mar muda <em>de cor.</em></h1>
+    <p>Entre a baía e a Mata Atlântica, descubra as praias de Ilha Grande, o Centro Histórico de Angra e os sabores da cozinha caiçara.</p>
+    <div class="guide-actions">
+      <a class="guide-button" href="#experiencias">Explorar Angra <span aria-hidden="true">↓</span></a>
+      <a class="guide-button guide-button-outline" href="#passeios">Ver passeios</a>
+    </div>
+    <dl class="hero-facts">
+      <div><dt>140 destinos</dt><dd>no nosso guia</dd></div>
+      <div><dt>Continente e Ilha Grande</dt><dd>praias, vilas e trilhas</dd></div>
+      <div><dt>Roteiros de lancha</dt><dd>pela baía de Angra</dd></div>
+    </dl>
+  </div>
+</section>
 
-        <div class="hero-content">
-          <div class="hero-copy-block">
-            <div class="hero-topline" aria-label="Resumo dos passeios">
-              <span>06 roteiros</span>
-              <span>Angra + Ilha Grande</span>
-              <span>média de 6h</span>
-            </div>
-            <p class="eyebrow">Passeios locais em Angra dos Reis</p>
-            <h1 id="hero-title" class="hero-brand-name">
-              <span class="hero-brand-viva">Viva</span>
-              <span class="hero-brand-angra">Angra</span>
-              <span class="hero-brand-tour">Tour</span>
-            </h1>
-            <p class="hero-copy">
-              Roteiros de lancha em Angra e Ilha Grande, com atendimento direto, saídas combinadas e cotação pelo WhatsApp.
-            </p>
+<section class="guide-experiences" id="experiencias" aria-labelledby="experiencias-title">
+  <div class="guide-shell">
+    <h2 id="experiencias-title">Escolha seu jeito de viver Angra</h2>
+    <div class="experience-grid">
+      <a class="experience-card" href="#guia-destinos" data-guide-filter="Praias e ilhas">
+        <img src="assets/lagoa-azul.jpg" alt="" loading="lazy">
+        <div><strong>Praias e ilhas</strong><span>Da Lagoa Azul às Ilhas Botinas, encontre sua próxima parada para banho.</span></div>
+      </a>
+      <a class="experience-card" href="#passeios">
+        <img src="assets/ilhas-botinas.jpg" alt="" loading="lazy">
+        <div><strong>Passeios de lancha</strong><span>Escolha um roteiro pelas ilhas e enseadas da baía.</span></div>
+      </a>
+      <a class="experience-card" href="#guia-destinos" data-guide-filter="Trilhas e natureza">
+        <img src="assets/pico-do-frade.jpg" alt="" loading="lazy">
+        <div><strong>Trilhas e natureza</strong><span>Explore caminhos da Mata Atlântica, cachoeiras e mirantes.</span></div>
+      </a>
+      <a class="experience-card" href="centro-historico.html">
+        <div><strong>História e cultura</strong><span>Conheça o Centro Histórico, as igrejas e a cultura caiçara.</span></div>
+      </a>
+      <a class="experience-card" href="onde-comer.html">
+        <div><strong>Gastronomia</strong><span>Descubra a cozinha caiçara, os frutos do mar e onde comer.</span></div>
+      </a>
+      <a class="experience-card" href="onde-ficar.html">
+        <div><strong>Hospedagem</strong><span>Escolha sua base entre o continente e as vilas da Ilha Grande.</span></div>
+      </a>
+    </div>
+  </div>
+</section>
 
-            <ul class="hero-points" aria-label="Destaques">
-              <li>Privativo ou compartilhado</li>
-              <li>Ilhas Paradisíacas, Lagoa Azul e Lado Frade</li>
-              <li>Cotação organizada pelo WhatsApp</li>
-            </ul>
+<section class="guide" id="onde-ir" aria-labelledby="guide-title">
+  <div class="guide-shell">
+    <div class="guide-heading">
+      <div>
+        <h2 id="guide-title">Onde ir em Angra</h2>
+        <p>Encontre seu próximo destino e veja como chegar.</p>
+      </div>
+      <a href="app/index.html">Abrir mapa e roteiro <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="guide-featured" id="guide-featured"></div>
+    <div class="guide-catalog" id="guia-destinos">
+      <h3>Guia de destinos</h3>
+      <div class="guide-controls">
+        <label>Buscar destino
+          <input type="search" id="guide-search" placeholder="Ex. Lagoa Azul" autocomplete="off">
+        </label>
+        <label>Categoria
+          <select id="guide-category">
+            <option value="">Todas as categorias</option>
+            <option>Praias e ilhas</option>
+            <option>Trilhas e natureza</option>
+            <option>História e cultura</option>
+            <option>Vilas e enseadas</option>
+          </select>
+        </label>
+      </div>
+      <p class="guide-count" id="guide-count" role="status"></p>
+      <div class="guide-grid" id="guide-grid"></div>
+      <button class="guide-more" id="guide-more" type="button" hidden>Mostrar mais destinos</button>
+      <noscript><p><a href="app/index.html">Abra o guia de destinos</a> com JavaScript ativado para pesquisar os lugares.</p></noscript>
+    </div>
+  </div>
+</section>
 
-            <div class="hero-actions" aria-label="Ações principais">
-              <a class="button button-primary" href="#roteiro">Montar meu passeio</a>
-              <a class="button button-secondary" data-whatsapp-link href="#" target="_blank" rel="noreferrer">Falar com a Viva Angra</a>
-            </div>
-          </div>
+<section class="guide-plan" id="planeje" aria-labelledby="guide-plan-title">
+  <div class="guide-shell">
+    <h2 id="guide-plan-title">Planeje sua viagem</h2>
+    <nav class="directory-tabs" aria-label="Guia da viagem">
+      <a href="#conheca-a-regiao">Conheça a região</a>
+      <a href="#onde-comer">Onde comer</a>
+      <a href="#onde-ficar">Onde ficar</a>
+    </nav>
 
-          <aside class="hero-showcase" aria-label="Destaques visuais dos roteiros">
-            <div class="hero-showcase-label" aria-hidden="true">
-              <span>Roteiros em destaque</span>
-              <strong>Angra dos Reis</strong>
-            </div>
-            <div class="hero-route-carousel" aria-label="Roteiros em destaque">
-              <figure class="hero-route-card" style="--card: 0">
-                <img src="assets/ilhas-botinas.jpg" decoding="async" loading="eager" fetchpriority="high" alt="Ilhas Botinas vistas do mar" />
-                <figcaption>
-                  <span>Banho e almoço</span>
-                  <strong>Ilhas Paradisíacas</strong>
-                </figcaption>
-              </figure>
+    <section class="directory-panel" id="conheca-a-regiao" aria-labelledby="region-title">
+      <h3 id="region-title">Conheça a região</h3>
+      <div class="guide-plan-grid directory-grid">
+        <a href="centro-historico.html"><strong>Centro Histórico</strong><span>Explore o Convento do Carmo, a Igreja Matriz, as praças e as casas de cultura.</span></a>
+        <a href="#guia-destinos" data-guide-filter="Vilas e enseadas"><strong>Vilas e enseadas</strong><span>Conheça o Abraão e outros pontos da costa da Ilha Grande.</span></a>
+        <a href="#passeios"><strong>Baía de Angra</strong><span>Veja roteiros de barco por Cataguases, Botinas, Gipóia e Lagoa Azul.</span></a>
+      </div>
+    </section>
 
-              <figure class="hero-route-card" style="--card: 1">
-                <img src="assets/lagoa-azul.jpg" decoding="async" loading="lazy" alt="Lagoa Azul em Ilha Grande" />
-                <figcaption>
-                  <span>Roteiro para snorkel</span>
-                  <strong>Lagoa Azul</strong>
-                </figcaption>
-              </figure>
+    <section class="directory-panel" id="onde-comer" aria-labelledby="food-title">
+      <h3 id="food-title">Onde comer</h3>
+      <p>Procure sabores caiçaras, peixes e frutos do mar na orla de Angra e nas vilas da Ilha Grande.</p>
+      <div class="guide-plan-grid directory-grid" data-directory="alimentacao"></div>
+      <a class="guide-button directory-request" href="onde-comer.html">Abrir guia · Onde comer</a>
+      <a class="guide-button directory-request" data-listing-request="Gastronomia" href="#contato" target="_blank" rel="noopener noreferrer">Indicar restaurante ou café</a>
+    </section>
 
-              <figure class="hero-route-card" style="--card: 2">
-                <img src="assets/itanhaga-lado-frade.jpg" decoding="async" loading="lazy" alt="Itanhagá no roteiro Lado Frade" />
-                <figcaption>
-                  <span>Saída pelo Frade</span>
-                  <strong>Lado Frade</strong>
-                </figcaption>
-              </figure>
+    <section class="directory-panel" id="onde-ficar" aria-labelledby="stay-title">
+      <h3 id="stay-title">Onde ficar</h3>
+      <p>O continente facilita a chegada por estrada. Na Ilha Grande, escolha a vila e confira o acesso de barco antes de reservar.</p>
+      <div class="guide-plan-grid directory-grid" data-directory="hospedagem"></div>
+      <a class="guide-button directory-request" href="onde-ficar.html">Abrir guia · Onde ficar</a>
+      <a class="guide-button directory-request" data-listing-request="Hospedagem" href="#contato" target="_blank" rel="noopener noreferrer">Indicar pousada ou hotel</a>
+    </section>
+    <a class="directory-route" href="#roteiro">Monte sua cotação de passeio <span aria-hidden="true">→</span></a>
+  </div>
+</section>
 
-              <figure class="hero-route-card" style="--card: 3">
-                <img src="assets/lopes-mendes.jpg" decoding="async" loading="lazy" alt="Praia de Lopes Mendes vista do alto" />
-                <figcaption>
-                  <span>Ilha Grande</span>
-                  <strong>Lopes Mendes</strong>
-                </figcaption>
-              </figure>
-
-              <figure class="hero-route-card" style="--card: 4">
-                <img src="assets/praia-do-aventureiro.jpg" decoding="async" loading="lazy" alt="Praia do Aventureiro com coqueiro e mar claro" />
-                <figcaption>
-                  <span>Dia especial</span>
-                  <strong>Praia do Aventureiro</strong>
-                </figcaption>
-              </figure>
-
-              <figure class="hero-route-card" style="--card: 5">
-                <img src="assets/vila-do-abraao.jpg" decoding="async" loading="lazy" alt="Vista aérea da Vila do Abraão, Ilha Grande" />
-                <figcaption>
-                  <span>Vila e praias próximas</span>
-                  <strong>Abraão</strong>
-                </figcaption>
-              </figure>
-            </div>
-
-            <div class="hero-stat">
-              <span>Duração média</span>
-              <strong>6 horas</strong>
-            </div>
-
-            <div class="hero-route-note">
-              <span>Saídas</span>
-              <strong>Frade, Centro, Abraão e Araçatiba</strong>
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      <section class="route-strip" aria-label="Resumo dos roteiros">
-        <div>
-          <strong>Duração média</strong>
-          <span>Passeios com cerca de 6 horas</span>
-        </div>
-        <div>
-          <strong>Saídas em Angra</strong>
-          <span>Frade, Garatucaia e Centro de Angra</span>
-        </div>
-        <div>
-          <strong>Saídas na Ilha Grande</strong>
-          <span>Abraão, Praia Vermelha e Araçatiba</span>
-        </div>
-      </section>
+<dialog class="guide-dialog" id="guide-dialog" aria-labelledby="guide-dialog-title">
+  <form method="dialog"><button type="submit" aria-label="Fechar detalhes">×</button></form>
+  <div id="guide-dialog-content"></div>
+</dialog>
 
       <section class="section section-intro" id="passeios" aria-labelledby="passeios-title">
         <div class="section-heading">

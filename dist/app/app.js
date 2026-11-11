@@ -81,7 +81,6 @@ function details(id){
  const fav=button(state.favorites.includes(id)?'✓ Nos favoritos':'♥ Salvar nos favoritos',()=>{favorite(id);details(id)});fav.className='primary';
  actions.append(fav,button('Adicionar a um dia',()=>chooseDay(id)));
  c.append(actions);
- const a=node('a','Consultar portal oficial de turismo');a.href='https://visite.angra.rj.gov.br/pontos-turisticos';a.target='_blank';a.rel='noopener';a.className='modal-source-link';c.append(a);
 }
 function chooseDay(id){
  const c=open('Adicionar '+byId.get(id).name);
