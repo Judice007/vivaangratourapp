@@ -90,3 +90,17 @@ for (const link of document.querySelectorAll("[data-listing-request]")) {
     "Instagram, site ou contato comercial: "
   );
 }
+for (const link of document.querySelectorAll("[data-hosting-application]")) {
+  link.href = buildUrl([
+    "Olá! Quero cadastrar minha hospedagem na Viva Angra Tour durante o período gratuito.",
+    "",
+    "Nome da hospedagem:",
+    "Tipo (hotel, pousada, casa ou apartamento de temporada):",
+    "Bairro ou vila:",
+    "Endereço ou localização no mapa:",
+    "Instagram, site ou link de reserva:",
+    "Contato comercial:",
+    "",
+    "Posso enviar por aqui as fotos autorizadas para divulgação.",
+  ].join("\n"));
+}
