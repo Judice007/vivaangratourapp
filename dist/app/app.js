@@ -4,11 +4,13 @@ const $ = id => document.getElementById(id);
 const slug = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 const curated = AngraData.curated ?? [];
 const curatedNames = new Set(curated.map(place => place.name));
-const places = [
+const allPlaces = [
  ...curated.map(place => ({...place, id:place.id ?? slug(place.name), verified:Number.isFinite(place.lat)})),
  ...AngraData.names.filter(name => !curatedNames.has(name)).map(name => ({id:slug(name), name})),
 ];
-const byId = new Map(places.map(p=>[p.id,p]));
+const byId = new Map(allPlaces.map(p=>[p.id,p]));
+const places = allPlaces.filter(place => !place.hidden);
+const isDiscoverable = id => byId.has(id) && !byId.get(id).hidden;
 const approximateCoordinates = {'praia-do-aventureiro':[-23.188,-44.315],'ilha-da-gipoia':[-23.047,-44.290],'vila-do-abraao':[-23.143,-44.166],'lagoa-azul':[-23.105,-44.255],'praia-de-lopes-mendes':[-23.174,-44.143],'pico-do-papagaio':[-23.155,-44.185]};
 const read = key => {try{return JSON.parse(localStorage.getItem(key))}catch{return null}};
 const defaults = {days:3,stay:'Ainda não sei',hotel:'Ainda estou procurando',boat:'Ainda não sei',party:'2 pessoas',budget:'Ainda não defini',tripDate:''};
@@ -16,7 +18,7 @@ const stored=read('angra-state-v2');
 const profile={...defaults,...(stored?.profile||read('angra-briefing')||{})};
 profile.days=Math.max(1,Math.min(30,parseInt(profile.days)||3));
 const linkedPlace = new URLSearchParams(location.search).get('lugar');
-let state={version:2,profile,current:byId.has(linkedPlace)?linkedPlace:byId.has(stored?.current)?stored.current:places[0].id,
+let state={version:2,profile,current:isDiscoverable(linkedPlace)?linkedPlace:isDiscoverable(stored?.current)?stored.current:places[0].id,
  favorites:Array.isArray(stored?.favorites)?[...new Set(stored.favorites.filter(id=>byId.has(id)))]:[],
  route:[]};
 const validItem = item => item && (byId.has(item.placeId)||typeof item.note==='string');
@@ -35,7 +37,7 @@ function save(){try{localStorage.setItem('angra-state-v2',JSON.stringify(state))
 function node(tag,text){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n}
 function button(text,fn){const b=node('button',text);b.type='button';b.onclick=fn;return b}
 function selected(){return byId.get(state.current)}
-function select(id){if(!byId.has(id))return;state.current=id;save();renderCard()}
+function select(id){if(!isDiscoverable(id))return;state.current=id;save();renderCard()}
 function renderCard(){
  const p=selected();
  const idx=places.findIndex(x=>x.id===p.id);
@@ -155,7 +157,7 @@ $('modal').addEventListener('click',e=>{if(e.target===$('modal')){const r=$('mod
 $('edit-trip').onclick=editTrip;$('pass').onclick=()=>advance(false);$('like').onclick=()=>advance(true);
 $('search').oninput=renderCatalog;
 window.AngraCardBridge={
- swipe:(id,dir)=>{if(busy)return;if(id!==state.current&&byId.has(id)){state.current=id;save()}advance(dir==='right')},
+ swipe:(id,dir)=>{if(busy)return;if(id!==state.current&&isDiscoverable(id)){state.current=id;save()}advance(dir==='right')},
  open:id=>{if(byId.has(id))details(id)},
  ready:()=>renderCard()
 };
@@ -187,7 +189,7 @@ script.onload=()=>{
  L.control.layers({'Satélite':satellite,'Mapa':streets},null,{collapsed:false}).addTo(map);
  let failed=false;satellite.on('tileerror',()=>{if(failed)return;failed=true;if(map.hasLayer(satellite)){map.removeLayer(satellite);streets.addTo(map);notice('Satélite indisponível. Exibindo mapa convencional.')}});
  $('map-overview').onclick=()=>map.fitBounds([[-23.25,-44.60],[-22.88,-44.08]]);
- renderCard();if(!byId.has(linkedPlace))map.fitBounds([[-23.25,-44.60],[-22.88,-44.08]]);setTimeout(()=>map.invalidateSize(),0);
+ renderCard();if(!isDiscoverable(linkedPlace))map.fitBounds([[-23.25,-44.60],[-22.88,-44.08]]);setTimeout(()=>map.invalidateSize(),0);
 };
 script.onerror=()=>{$('map').textContent='Mapa indisponível. Use o link de localização abaixo.'};document.head.append(script);
 })();

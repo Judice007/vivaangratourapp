@@ -30,8 +30,8 @@ window.VivaAngraDirectory = {
   ],
   hospedagem: [
     {name: "Pousada Asalém", location: "Angra dos Reis"},
-    {name: "Pousada Caiçara", location: "Angra dos Reis"},
+    {name: "Pousada Caiçara", hidden: true, location: "Angra dos Reis"},
     {name: "Pousada Casablanca", location: "Angra dos Reis"},
-    {name: "Ocean Green Flats", location: "Angra dos Reis"},
+    {name: "Ocean Green Flats", hidden: true, location: "Angra dos Reis"},
   ],
 };

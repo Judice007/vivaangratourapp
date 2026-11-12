@@ -12,6 +12,9 @@
   const bySlug = new Map(places.map((place) => [slug(place.name), [place]]));
   const photoCredit = "Fotos do acervo Experiências Viva Angra.";
 
+  // Hospedagens com divulgação suspensa durante o convite para o piloto.
+  const pausedLodgingIds = new Set([349, 387, 370, 1048, 372, 1044]);
+
   for (const source of window.VivaAngraPortalCatalog) {
     const key = slug(beachAliases.get(source.portalId) ?? source.name);
     const candidates = bySlug.get(key) ?? [];
@@ -23,6 +26,7 @@
         !["angra-dos-reis", "ilha-grande"].includes(slug(source.location)))
     );
     if (match) {
+      if (pausedLodgingIds.has(source.portalId)) match.hidden = true;
       match.location ??= source.location;
       match.access ??= source.access;
       match.portalIds = [...(match.portalIds ?? []), source.portalId];
@@ -40,6 +44,7 @@
       id: candidates.length ? key + "-" + source.portalId : key,
       portalCategories: [source.portalCategory],
       portalIds: [source.portalId],
+      hidden: pausedLodgingIds.has(source.portalId),
       photoUrl: source.gallery?.[0],
       photoCredit: source.gallery?.length ? photoCredit : undefined,
     };

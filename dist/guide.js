@@ -1,4 +1,4 @@
-const guidePlaces = window.AngraData.curated;
+const guidePlaces = window.AngraData.curated.filter((place) => !place.hidden);
 const guideSearch = document.querySelector("#guide-search");
 const guideCategory = document.querySelector("#guide-category");
 const guideGrid = document.querySelector("#guide-grid");

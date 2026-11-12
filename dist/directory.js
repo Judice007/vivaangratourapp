@@ -50,7 +50,7 @@ function directoryListingDetails(entry) {
 }
 
 for (const list of document.querySelectorAll("[data-directory]")) {
-  const entries = window.VivaAngraDirectory[list.dataset.directory];
+  const entries = window.VivaAngraDirectory[list.dataset.directory].filter((entry) => !entry.hidden);
   if (!entries.length) {
     list.append(guideElement("p", "As indicações locais aparecerão aqui conforme forem incluídas no guia.", "directory-empty"));
     continue;
