@@ -13,7 +13,7 @@
   const photoCredit = "Fotos do acervo Experiências Viva Angra.";
 
   // Hospedagens com divulgação suspensa durante o convite para o piloto.
-  const pausedLodgingIds = new Set([349, 387, 370, 1048, 372, 1044]);
+  const pausedLodgingIds = new Set([349, 387, 370, 1048, 372, 1044, 383, 381, 391, 1061, 396, 367, 1050, 1057, 317]);
 
   for (const source of window.VivaAngraPortalCatalog) {
     const key = slug(beachAliases.get(source.portalId) ?? source.name);
